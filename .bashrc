@@ -1,3 +1,4 @@
+export TERM=xterm-256color
 # ~/.bashrc: executed by bash(1) for non-login shells.
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
@@ -58,8 +59,10 @@ fi
 
 if [ "$color_prompt" = yes ]; then
     PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+    PS1="[\[\e[1;36m\]\u\[\e[m\]@\[\e[1;33m\]\h\[\e[m\]:\[\e[1;35m\]\w\[\e[m\]] \[\e[1;32m\]\@\[\e[m\] \[\e[1;31m\]\\n$\[\e[m\] "
 else
     PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
+    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
 fi
 unset color_prompt force_color_prompt
 
@@ -67,6 +70,7 @@ unset color_prompt force_color_prompt
 case "$TERM" in
 xterm*|rxvt*)
     PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
+    # PROMPT_COMMAND="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$ "
     ;;
 *)
     ;;
@@ -116,7 +120,8 @@ if ! shopt -oq posix; then
   fi
 fi
 
-cd /mnt/c/Users/yzia2/OneDrive/
+
+# cd /mnt/c/Users/yzia2/OneDrive/
 
 export CC=/usr/local/bin/clang
 export LD_LIBRARY_PATH=/usr/local/lib
@@ -133,12 +138,63 @@ set -o vi
 
 
 # Base16 Shell
-BASE16_SHELL="$HOME/.config/base16-shell/"
-[ -n "$PS1" ] && \
-    [ -s "$BASE16_SHELL/profile_helper.sh" ] && \
-        eval "$("$BASE16_SHELL/profile_helper.sh")"
+# BASE16_SHELL="$HOME/.config/base16-shell/"
+# [ -n "$PS1" ] && \
+#     [ -s "$BASE16_SHELL/profile_helper.sh" ] && \
+#         eval "$("$BASE16_SHELL/profile_helper.sh")"
 
 # Color
 LS_COLORS=$LS_COLORS:'ow=1;35:' ; export LS_COLORS
+# get current branch in git repo
+# function parse_git_branch() {
+#   BRANCH=`git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/'`
+#   if [ ! "${BRANCH}" == "" ]
+#   then
+#     STAT=`parse_git_dirty`
+#     echo "[${BRANCH}${STAT}]"
+#   else
+#     echo ""
+#   fi
+# }
 
+# get current status of git repo
+# function parse_git_dirty {
+#   status=`git status 2>&1 | tee`
+#   dirty=`echo -n "${status}" 2> /dev/null | grep "modified:" &> /dev/null; echo "$?"`
+#   untracked=`echo -n "${status}" 2> /dev/null | grep "Untracked files" &> /dev/null; echo "$?"`
+#   ahead=`echo -n "${status}" 2> /dev/null | grep "Your branch is ahead of" &> /dev/null; echo "$?"`
+#   newfile=`echo -n "${status}" 2> /dev/null | grep "new file:" &> /dev/null; echo "$?"`
+#   renamed=`echo -n "${status}" 2> /dev/null | grep "renamed:" &> /dev/null; echo "$?"`
+#   deleted=`echo -n "${status}" 2> /dev/null | grep "deleted:" &> /dev/null; echo "$?"`
+#   bits=''
+#   if [ "${renamed}" == "0" ]; then
+#     bits=">${bits}"
+#   fi
+#   if [ "${ahead}" == "0" ]; then
+#     bits="*${bits}"
+#   fi
+#   if [ "${newfile}" == "0" ]; then
+#     bits="+${bits}"
+#   fi
+#   if [ "${untracked}" == "0" ]; then
+#     bits="?${bits}"
+#   fi
+#   if [ "${deleted}" == "0" ]; then
+#     bits="x${bits}"
+#   fi
+#   if [ "${dirty}" == "0" ]; then
+#     bits="!${bits}"
+#   fi
+#   if [ ! "${bits}" == "" ]; then
+#     echo " ${bits}"
+#   else
+#     echo ""
+#   fi
+# }
+#
+# export PS1="[\[\e[36m\]\u\[\e[m\]@\[\e[33;40m\]\h\[\e[m\]:\w]\`parse_git_branch\`\@\\$ "
+# export PS1="[\[\e[36m\]\u\[\e[m\]@\[\e[33m\]\h\[\e[m\]:\w] \@ \\n$ "
+# PS1='[\[\e[1;36m\]\u\[\e[m\]@\[\e[1;33m\]\h\[\e[m\]:\[\e[1;35m\]\w\[\e[m\]] \[\e[1;32m\]\@\[\e[m\] \[\e[1;31m\]\\n$\[\e[m\] '
+
+# Dotfile store
 alias config='/usr/bin/git --git-dir=/home/yousuf/.cfg/ --work-tree=/home/yousuf'
