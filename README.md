@@ -7,4 +7,4 @@ and much more!
 
 
 
-![alt text](https://github.com/yzia2000/dotfiles/blob/master/WSL.jpg)
+![alt text](https://github.com/yzia2000/dotfiles/blob/master/WSL_m.jpg)
