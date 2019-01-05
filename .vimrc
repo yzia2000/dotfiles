@@ -1,6 +1,7 @@
 set nocompatible
 set hidden
-
+set backup
+set backupdir=~/.backups
 syntax on
 filetype off
 
@@ -24,6 +25,7 @@ call vundle#begin()
   Plugin 'vim-ctrlspace/vim-ctrlspace'
   Plugin 'chriskempson/base16-vim'
   Plugin 'Yggdroot/indentLine'
+  Plugin 'enricobacis/vim-airline-clock'
  
 call vundle#end()
 
@@ -81,10 +83,11 @@ noremap <Right> <Nop>
 " set t_ut=0
 set termguicolors
 " colo flattened_dark
-if filereadable(expand("~/.vimrc_background"))
-  let base16colorspace=256
-  source ~/.vimrc_background
-endif
+" if filereadable(expand("~/.vimrc_background"))
+"   let base16colorspace=256
+"   source ~/.vimrc_background
+" endif
+colo base16-monokai
 
 "For syntastic
 set laststatus=2
@@ -162,9 +165,9 @@ endif
 au InsertEnter * exec "inoremap <silent> " . g:UltiSnipsExpandTrigger     . " <C-R>=g:UltiSnips_Complete()<cr>"
 au InsertEnter * exec "inoremap <silent> " .     g:UltiSnipsJumpBackwardTrigger . " <C-R>=g:UltiSnips_Reverse()<cr>"
 
-   imap <expr> <CR> pumvisible()
-                    \ ? "\<C-Y>"
-                    \ : "<Plug>delimitMateCR"
+imap <expr> <CR> pumvisible()
+  \ ? "\<C-Y>"
+  \ : "<Plug>delimitMateCR"
 
 " Powerline
 " set rtp+=$HOME/.local/lib/python3.6/site-packages/powerline/bindings/vim
@@ -195,6 +198,7 @@ let g:NERDToggleCheckAllLines = 1
 
 " Airline
 let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#clock#format = '%I:%M %p'
 let g:airline_powerline_fonts = 1
 if !exists('g:airline_symbols')
   let g:airline_symbols = {}
