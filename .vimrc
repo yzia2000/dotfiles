@@ -211,7 +211,7 @@ let g:airline#extensions#hunks#non_zero_only = 1
 let b:airline_whitespace_checks = [ 'indent', 'trailing', 'long', 'mixed-indent-file'  ]
 
 " CtrlSpace
-" let g:CtrlSpaceSymbols = { "CS" : "#", "All" : "ALL" }
+let g:CtrlSpaceSymbols = { "CS" : "#", "All" : "ALL" }
 let g:CtrlSpaceFileEngline = "auto"
 let g:CtrlSpaceSearchTiming = 500
 
@@ -226,3 +226,7 @@ end
 
 map <silent> "+p :r !powershell.exe -Command Get-Clipboard<CR>"
 map <C-v> "+p
+
+" Set comments italic
+highlight Comment cterm=italic
+
