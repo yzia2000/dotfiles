@@ -7,6 +7,6 @@ and much more!
 
 Use the .tmux.conf for mouse support
 
-Recommend Terminal Emulator: ![alt wsltty](https://github.com/mintty/wsltty)
+Recommend Terminal Emulator: ![wsltty](https://github.com/mintty/wsltty)
 
 ![alt text](https://github.com/yzia2000/dotfiles/blob/master/WSL_m.jpg)
