@@ -5,8 +5,8 @@ Jealous of Mac and Linux users flaunting their beautiful vim configs and unable 
 WSL Ubuntu? Checkout my .vimrc file for a customized VIM fit for programming, editing files
 and much more!
 
+Use the .tmux.conf for mouse support
 
-
-TMUX with MOUSE SUPPORT!??????????????????????????
+Recommend Terminal Emulator: ![alt wsltty](https://github.com/mintty/wsltty)
 
 ![alt text](https://github.com/yzia2000/dotfiles/blob/master/WSL_m.jpg)
