@@ -95,7 +95,6 @@ Changing WSLtty settings:
 Open file on windows: %appdata%\wsltty\config
 
 Replace the contents of the file with this:
-# To use common configuration in %APPDATA%\mintty, simply remove this file
 Font=DejaVuSansMono Nerd Font Mono
 Term=xterm-256color
 Transparency=low
@@ -104,6 +103,9 @@ BackgroundColour=13,25,38
 ForegroundColour=217,230,242
 CursorColour=217,230,242
 CtrlShiftShortcuts=yes
+
+
+
 
 Lastly, configuring tmux:
 Run tmux in wsl:
