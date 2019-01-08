@@ -1,4 +1,4 @@
-WSL VIM CONFIG
+WSL Ubuntu CONFIG
 -------------------------
 
 Jealous of Mac and Linux users flaunting their beautiful vim configs and unable to replicate them on
