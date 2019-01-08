@@ -60,8 +60,7 @@ sudo apt-get upgrade
 
 Install Ruby:
 ```
-curl -L https://get.rvm.io | bash -s stable --ruby
-rvm reinstall VERSION -C --enable-shared
+sudo apt install ruby-full
 ```
 
 Install latest vim:
