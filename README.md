@@ -139,7 +139,7 @@ Type:
 ```
 
 ```
-Replace the contents of the file with this:
+#Replace the contents of the file with this:
 Font=DejaVuSansMono Nerd Font Mono
 Term=xterm-256color
 Transparency=low
