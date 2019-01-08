@@ -131,7 +131,12 @@ https://github.com/mintty/wsltty/releases/download/1.9.5/wsltty-1.9.5-install.ex
 (You have to allow windows defender to install the file)
 
 Changing WSLtty settings:
-Open file on windows: %appdata%\wsltty\config
+Open file on windows:
+Press Windows + R
+Type:
+```
+%appdata%\wsltty\config
+```
 
 ```
 Replace the contents of the file with this:
