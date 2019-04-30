@@ -128,7 +128,7 @@ if [ "$TMUX" = "" ]; then tmux; fi
 # cd /mnt/c/Users/yzia2/OneDrive/
 
 # Default C-Compiler
-export CC=/usr/local/bin/clang
+# export CC=/usr/local/bin/clang
 export LD_LIBRARY_PATH=/usr/local/lib
 
 # Set vi mode
@@ -142,3 +142,14 @@ alias config='/usr/bin/git --git-dir=/home/yousuf/.cfg/ --work-tree=/home/yousuf
 
 # Make vim the default text editor
 set EDITOR=vim
+
+source /opt/ros/melodic/setup.bash
+alias kattis="cd /mnt/c/Users/yzia2/OneDrive/Documents/Kattis"
+
+export BROWSER=/mnt/c/Program\ Files\ \(x86\)/Google/Chrome/Application/chrome.exe
+alias vrc="vim ~/.vimrc"
+alias cvflags="pkg-config --cflags --libs opencv"
+export DISPLAY=0:0
+export DOCKER_HOST=tcp://localhost:2375
+. /mnt/c/Users/yzia2/OneDrive/Documents/alex_obj_recog/devel/setup.bash
+

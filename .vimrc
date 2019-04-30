@@ -8,10 +8,12 @@ filetype off
 set rtp+=~/.vim/bundle/Vundle.vim
 
 call vundle#begin()
-
+  
+  Plugin 'taketwo/vim-ros'
   Plugin 'VundleVim/Vundle.vim'
   Plugin 'tpope/vim-fugitive'
   " Plugin 'vim-syntastic/syntastic'
+  Plugin 'vim-scripts/Arduino-syntax-file'
   Plugin 'octol/vim-cpp-enhanced-highlight'
   Plugin 'Valloric/YouCompleteMe'
   Plugin 'SirVer/ultisnips'
@@ -26,6 +28,9 @@ call vundle#begin()
   Plugin 'chriskempson/base16-vim'
   Plugin 'Yggdroot/indentLine'
   Plugin 'enricobacis/vim-airline-clock'
+  Plugin 'sudar/vim-arduino-syntax'
+  Plugin 'sudar/vim-arduino-snippets'
+
  
 call vundle#end()
 
@@ -99,7 +104,7 @@ set laststatus=2
 " let g:syntastic_warning_symbol = '⚠'
 " let g:syntastic_always_populate_loc_list = 1
 " let g:syntastic_auto_loc_list = 1
-" let g:syntastic_check_on_open = 1
+" let g:syntastic_check_on_open = 0
 " let g:syntastic_check_on_wq = 0
 "
 " let g:syntastic_c_checkers = [ 'clang_tidy', 'clang' ]
@@ -123,9 +128,17 @@ let g:ycm_server_log_level = 'debug'
 let g:ycm_warning_symbol = '⚠'
 let g:ycm_error_symbol = '✗'
 let g:ycm_server_use_vim_stdout = 1
-let g:ycm_global_ycm_extra_conf='~/.vim/.ycm_extra_conf.py'
+let g:ycm_global_ycm_extra_conf='~/.vim/.ycm_extra_conf1.py'
 let g:ycm_autoclose_preview_window_after_insertion = 1
+let g:ycm_enable_diagnostic_highlighting = 0
+" let g:ycm_seed_identifiers_with_syntax = 1
+let g:ycm_always_populate_location_list = 1
+let g:ycm_collect_identifiers_from_tags_files = 1
 
+let g:ycm_semantic_triggers = {
+\   'roslaunch' : ['="', '$(', '/'],
+\   'rosmsg,rossrv,rosaction' : ['re!^', '/'],
+\ }
 " Delimitmate settings
 let g:delimitMate_expand_space = 1
 let g:delimitMate_expand_cr = 2
@@ -230,3 +243,13 @@ map <C-v> "+p
 " Set comments italic
 highlight Comment cterm=italic
 
+
+map <leader>r :w <CR> :!clear <CR> :!clang++ -lm % -o %<_out && ./%<_out <CR>
+map <leader>m :w <CR> :!clear; cmake .; make; clear<CR> :!./%<_out 
+map <leader>b :w <CR> :!clear; cmake .; make; clear<CR><CR>
+map <leader>s :w <CR> :!clear; python3 submit.py %; clear <CR><CR>
+map <leader>t :w <CR> :!clear; python3 test.py %<<CR>
+
+
+if has('python')
+endif
