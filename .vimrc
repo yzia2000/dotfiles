@@ -9,10 +9,14 @@ set rtp+=~/.vim/bundle/Vundle.vim
 
 call vundle#begin()
   
+  Plugin 'airblade/vim-rooter'
+  Plugin 'tfnico/vim-gradle'
+  Plugin 'dragfire/Improved-Syntax-Highlighting-Vim'
   Plugin 'taketwo/vim-ros'
+  Plugin 'szymonmaszke/vimpyter'
   Plugin 'VundleVim/Vundle.vim'
   Plugin 'tpope/vim-fugitive'
-  " Plugin 'vim-syntastic/syntastic'
+  Plugin 'vim-syntastic/syntastic'
   Plugin 'vim-scripts/Arduino-syntax-file'
   Plugin 'octol/vim-cpp-enhanced-highlight'
   Plugin 'Valloric/YouCompleteMe'
@@ -68,8 +72,8 @@ set ruler
 
 set autoindent
 set smartindent
-set shiftwidth=2
-set tabstop=2
+set shiftwidth=4
+set tabstop=4
 set expandtab
 set nowrap
 set backspace=2
@@ -96,17 +100,19 @@ colo base16-monokai
 
 "For syntastic
 set laststatus=2
-" set statusline+=%#warningmsg#
-" set statusline+=%{SyntasticStatuslineFlag()}
-"
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
 
-" let g:syntastic_error_symbol = '✗'
-" let g:syntastic_warning_symbol = '⚠'
-" let g:syntastic_always_populate_loc_list = 1
-" let g:syntastic_auto_loc_list = 1
-" let g:syntastic_check_on_open = 0
-" let g:syntastic_check_on_wq = 0
-"
+
+let g:syntastic_error_symbol = '✗'
+let g:syntastic_warning_symbol = '⚠'
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 0
+let g:syntastic_check_on_wq = 0
+let g:syntastic_java_checkstyle_classpath = ""
+
 " let g:syntastic_c_checkers = [ 'clang_tidy', 'clang' ]
 " let g:syntastic_c_compiler = 'clang'
 " let g:syntastic_c_clang_args = '-Wall -Werror -Wextra -Iinclude'
@@ -114,6 +120,7 @@ set laststatus=2
 " let g:syntastic_c_compiler_options = '-Wall -Iinclude'
 " let g:syntastic_c_include_dirs = [ '../include', 'include' ]
 " let g:syntastic_c_clang_tidy_post_args = ""
+
 
 " C/C++ syntax highlighting
 let g:cpp_class_scope_highlight=1
@@ -243,13 +250,21 @@ map <C-v> "+p
 " Set comments italic
 highlight Comment cterm=italic
 
+if &filetype ==# 'c' || &filetype ==# 'cpp'
+  map <leader>r :w <CR> :!clear <CR> :!clang++ -lm % -o %<_out && ./%<_out <CR>
+  map <leader>m :w <CR> :!clear; cmake .; make; clear<CR> :!./%<_out
+  map <leader>b :w <CR> :!clear; cmake .; make; clear<CR><CR>
+  map <leader>s :w <CR> :!clear; python3 submit.py %; clear <CR><CR>
+  map <leader>t :w <CR> :!clear; python3 test.py %<<CR>
+endif
 
-map <leader>r :w <CR> :!clear <CR> :!clang++ -lm % -o %<_out && ./%<_out <CR>
-map <leader>m :w <CR> :!clear; cmake .; make; clear<CR> :!./%<_out 
-map <leader>b :w <CR> :!clear; cmake .; make; clear<CR><CR>
-map <leader>s :w <CR> :!clear; python3 submit.py %; clear <CR><CR>
-map <leader>t :w <CR> :!clear; python3 test.py %<<CR>
-
+autocmd FileType java map <leader>r :w <CR> :!clear <CR> :compiler gradlew <CR> :make run <CR>
+autocmd FileType java map <leader>c :w <CR> :!clear <CR> :compiler gradlew <CR> :make build <CR>
+autocmd FileType java map <leader>t :w <CR> :!clear <CR> :compiler gradlew <CR> :make test <CR>
 
 if has('python')
 endif
+
+let g:syntastic_java_checkstyle_classpath='~/checkstyle-8.24-all.jar'
+let g:syntastic_java_checkers=['checkstyle']
+let g:syntastic_java_checkstyle_conf_file = '~/checkstyle.xml'

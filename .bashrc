@@ -1,6 +1,9 @@
 # Default Terminal
 export TERM=xterm-256color
 
+# tmux on startup
+if [ "$TMUX" = "" ]; then tmux; fi
+
 # ~/.bashrc: executed by bash(1) for non-login shells.
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
@@ -122,8 +125,6 @@ if ! shopt -oq posix; then
   fi
 fi
 
-# tmux on startup
-if [ "$TMUX" = "" ]; then tmux; fi
 
 # cd /mnt/c/Users/yzia2/OneDrive/
 
@@ -143,13 +144,27 @@ alias config='/usr/bin/git --git-dir=/home/yousuf/.cfg/ --work-tree=/home/yousuf
 # Make vim the default text editor
 set EDITOR=vim
 
-source /opt/ros/melodic/setup.bash
+# source /opt/ros/melodic/setup.bash
 alias kattis="cd /mnt/c/Users/yzia2/OneDrive/Documents/Kattis"
 
 export BROWSER=/mnt/c/Program\ Files\ \(x86\)/Google/Chrome/Application/chrome.exe
 alias vrc="vim ~/.vimrc"
+alias brc="vim ~/.bashrc"
 alias cvflags="pkg-config --cflags --libs opencv"
 export DISPLAY=0:0
 export DOCKER_HOST=tcp://localhost:2375
-. /mnt/c/Users/yzia2/OneDrive/Documents/alex_obj_recog/devel/setup.bash
+# . /mnt/c/Users/yzia2/OneDrive/Documents/alex_obj_recog/devel/setup.bash
+alias socserver='ssh xgpd0'
+alias sunfire='ssh yousuf@sunfire.comp.nus.edu.sg'
+alias sshnextdesk='ssh yousuf@172.26.187.138'
+alias homessh='ssh 172.26.187.138'
+alias sshnext='ssh -L 16006:localhost:6006 next-gpu4.d2'
+alias ssh='ssh -L 6006:localhost:6006'
+cd /mnt/c/Users/yzia2/OneDrive/Documents
+export PATH=$PATH:/usr/local/go/bin
 
+#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+export SDKMAN_DIR="/home/yousuf/.sdkman"
+[[ -s "/home/yousuf/.sdkman/bin/sdkman-init.sh" ]] && source "/home/yousuf/.sdkman/bin/sdkman-init.sh"
+
+alias git-root='cd "$(git rev-parse --show-toplevel)"'
