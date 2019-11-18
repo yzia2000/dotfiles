@@ -159,7 +159,7 @@ alias sunfire='ssh yousuf@sunfire.comp.nus.edu.sg'
 alias sshnextdesk='ssh yousuf@172.26.187.138'
 alias homessh='ssh 172.26.187.138'
 alias sshnext='ssh -L 16006:localhost:6006 next-gpu4.d2'
-alias ssh='ssh -L 6006:localhost:6006'
+alias ssh='ssh -L 6010:localhost:6006'
 cd /mnt/c/Users/yzia2/OneDrive/Documents
 export PATH=$PATH:/usr/local/go/bin
 
@@ -168,3 +168,4 @@ export SDKMAN_DIR="/home/yousuf/.sdkman"
 [[ -s "/home/yousuf/.sdkman/bin/sdkman-init.sh" ]] && source "/home/yousuf/.sdkman/bin/sdkman-init.sh"
 
 alias git-root='cd "$(git rev-parse --show-toplevel)"'
+export PATH_TO_FX=~/openjfx-11.0.2_linux-x64_bin-sdk/javafx-sdk-11.0.2/lib
