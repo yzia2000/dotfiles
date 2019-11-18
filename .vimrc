@@ -1,9 +1,20 @@
+syntax on
 set nocompatible
 set hidden
 set backup
 set backupdir=~/.backups
-syntax on
+set number
+set ruler
+set autoindent
+set smartindent
+set shiftwidth=4
+set tabstop=4
+set expandtab
+set nowrap
+set backspace=2
+
 filetype off
+
 
 set rtp+=~/.vim/bundle/Vundle.vim
 
@@ -25,13 +36,9 @@ call vundle#begin()
   Plugin 'Raimondi/delimitMate'
   Plugin 'rafi/awesome-vim-colorschemes'
   Plugin 'scrooloose/nerdcommenter'
-  Plugin 'vim-airline/vim-airline'
-  Plugin 'vim-airline/vim-airline-themes'
   Plugin 'bling/vim-bufferline'
-  Plugin 'vim-ctrlspace/vim-ctrlspace'
   Plugin 'chriskempson/base16-vim'
   Plugin 'Yggdroot/indentLine'
-  Plugin 'enricobacis/vim-airline-clock'
   Plugin 'sudar/vim-arduino-syntax'
   Plugin 'sudar/vim-arduino-snippets'
 
@@ -47,7 +54,7 @@ set path+=**
 set wildmenu
 
 " Create 'tags' file (may need to install ctags first)
-" command! MakeTags !ctags -R .
+command! MakeTags !ctags -R .
 
 " Above enabled commads
 " ^] to jump to tag under cursor
@@ -67,44 +74,27 @@ let g:netrw_list_hide.=',\(^\|\s\s\)\zs\.\S\+'
 " :cc# to jump to error by number
 " :cn and :cp to navigate forward and back
 
-set number
-set ruler
-
-set autoindent
-set smartindent
-set shiftwidth=4
-set tabstop=4
-set expandtab
-set nowrap
-set backspace=2
-
 " Remove arrow keys
 noremap <Up> <Nop>
 noremap <Down> <Nop>
 noremap <Left> <Nop>
 noremap <Right> <Nop>
 
-" Adding color column
-" set textwidth=80
-" set colorcolumn=+1
-
 " Color scheme
-" set t_ut=0
 set termguicolors
-" colo flattened_dark
-" if filereadable(expand("~/.vimrc_background"))
-"   let base16colorspace=256
-"   source ~/.vimrc_background
-" endif
-colo base16-monokai
+colo ayu
+
+" statusline
+set laststatus=2
+set statusline=%F%m%r%h%w\
+set statusline+=%{fugitive#statusline()}\
+set statusline+=[%{strlen(&fenc)?&fenc:&enc}]
+set statusline+=\ [line\ %l\/%L]
+set statusline=\ %f%m%r%h%w\ %=%({%{&ff}\|%{(&fenc==\"\"?&enc:&fenc).((exists(\"+bomb\")\ &&\ &bomb)?\",B\":\"\")}%k\|%Y}%)\ %([%l,%v][%p%%]\ %)
+let g:bufferline_echo = 1
+
 
 "For syntastic
-set laststatus=2
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
-
-
 let g:syntastic_error_symbol = '✗'
 let g:syntastic_warning_symbol = '⚠'
 let g:syntastic_always_populate_loc_list = 1
@@ -112,13 +102,18 @@ let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 0
 let g:syntastic_check_on_wq = 0
 
-" let g:syntastic_c_checkers = [ 'clang_tidy', 'clang' ]
-" let g:syntastic_c_compiler = 'clang'
-" let g:syntastic_c_clang_args = '-Wall -Werror -Wextra -Iinclude'
-" let g:syntastic_c_clang_tidy_args = '-checks=*'
-" let g:syntastic_c_compiler_options = '-Wall -Iinclude'
-" let g:syntastic_c_include_dirs = [ '../include', 'include' ]
-" let g:syntastic_c_clang_tidy_post_args = ""
+let g:syntastic_c_checkers = [ 'clang_tidy', 'clang' ]
+let g:syntastic_c_compiler = 'clang'
+let g:syntastic_c_clang_args = '-Wall -Werror -Wextra -Iinclude'
+let g:syntastic_c_clang_tidy_args = '-checks=*'
+let g:syntastic_c_compiler_options = '-Wall -Iinclude'
+let g:syntastic_c_include_dirs = [ '../include', 'include' ]
+let g:syntastic_c_clang_tidy_post_args = ""
+
+let g:syntastic_java_checkers = [ "checkstyle" ]
+let g:syntastic_java_checkstyle_classpath = "~/checkstyle-8.23-all.jar"
+let g:syntastic_java_checkstyle_conf_file = "~/checkstyle.xml"
+let b:syntastic_mode = "passive"
 
 
 " C/C++ syntax highlighting
@@ -188,52 +183,6 @@ imap <expr> <CR> pumvisible()
   \ ? "\<C-Y>"
   \ : "<Plug>delimitMateCR"
 
-" Powerline
-" set rtp+=$HOME/.local/lib/python3.6/site-packages/powerline/bindings/vim
-
-" Add spaces after comment delimiters by default
-let g:NERDSpaceDelims = 1
-
-" Use compact syntax for prettified multi-line comments
-let g:NERDCompactSexyComs = 1
-
-" Align line-wise comment delimiters flush left instead of following code indentation
-let g:NERDDefaultAlign = 'left'
-
-" Set a language to use its alternate delimiters by default
-let g:NERDAltDelims_java = 1
-
-" Add your own custom formats or override the defaults
-let g:NERDCustomDelimiters = { 'c': { 'left': '/**','right': '*/'  }  }
-
-" Allow commenting and inverting empty lines (useful when commenting a region)
-let g:NERDCommentEmptyLines = 1
-
-" Enable trimming of trailing whitespace when uncommenting
-let g:NERDTrimTrailingWhitespace = 1
-
-" Enable NERDCommenterToggle to check all selected lines is commented or not 
-let g:NERDToggleCheckAllLines = 1
-
-" Airline
-let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#clock#format = '%I:%M %p'
-let g:airline_powerline_fonts = 1
-if !exists('g:airline_symbols')
-  let g:airline_symbols = {}
-endif
-set ttimeoutlen=10
-let g:airline#extensions#whitespace#enabled = 1
-let g:airline#extensions#hunks#non_zero_only = 1
-" let g:airline_symbols.linenr='≡'
-" let g:airline_symbols.whitespace = '✹'
-let b:airline_whitespace_checks = [ 'indent', 'trailing', 'long', 'mixed-indent-file'  ]
-
-" CtrlSpace
-let g:CtrlSpaceSymbols = { "CS" : "#", "All" : "ALL" }
-let g:CtrlSpaceFileEngline = "auto"
-let g:CtrlSpaceSearchTiming = 500
-
 " Pasting
 let s:clip = '/mnt/c/Windows/System32/clip.exe' 
 if executable(s:clip)
@@ -249,6 +198,7 @@ map <C-v> "+p
 " Set comments italic
 highlight Comment cterm=italic
 
+" c/cpp specific bindings
 if &filetype ==# 'c' || &filetype ==# 'cpp'
   map <leader>r :w <CR> :!clear <CR> :!clang++ -lm % -o %<_out && ./%<_out <CR>
   map <leader>m :w <CR> :!clear; cmake .; make; clear<CR> :!./%<_out
@@ -257,6 +207,7 @@ if &filetype ==# 'c' || &filetype ==# 'cpp'
   map <leader>t :w <CR> :!clear; python3 test.py %<<CR>
 endif
 
+" java specific bindings
 autocmd FileType java map <leader>r :w <CR> :!clear <CR> :compiler gradlew <CR> :make run <CR>
 autocmd FileType java map <leader>c :w <CR> :!clear <CR> :compiler gradlew <CR> :make build <CR>
 autocmd FileType java map <leader>t :w <CR> :!clear <CR> :compiler gradlew <CR> :make test <CR>
@@ -264,8 +215,3 @@ autocmd FileType java map <leader>t :w <CR> :!clear <CR> :compiler gradlew <CR> 
 if has('python')
 endif
 
-let g:syntastic_java_checkers = [ "checkstyle" ]
-let g:syntastic_java_checkstyle_classpath = "~/checkstyle-8.23-all.jar"
-let g:syntastic_java_checkstyle_conf_file = "~/checkstyle.xml"
-
-let b:syntastic_mode = "passive"
