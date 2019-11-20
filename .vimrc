@@ -113,7 +113,9 @@ let g:syntastic_c_clang_tidy_post_args = ""
 let g:syntastic_java_checkers = [ "checkstyle" ]
 let g:syntastic_java_checkstyle_classpath = "~/checkstyle-8.23-all.jar"
 let g:syntastic_java_checkstyle_conf_file = "~/checkstyle.xml"
-let b:syntastic_mode = "passive"
+let g:syntastic_mode_map = { 'mode': 'passive',
+                            \ 'active_filetypes': ['python'],
+                            \ 'passive_filetypes': ['html', 'javascript', 'c', 'c++', 'java'] }
 
 
 " C/C++ syntax highlighting
@@ -131,7 +133,7 @@ let g:ycm_error_symbol = '✗'
 let g:ycm_server_use_vim_stdout = 1
 let g:ycm_global_ycm_extra_conf='~/.vim/.ycm_extra_conf1.py'
 let g:ycm_autoclose_preview_window_after_insertion = 1
-let g:ycm_enable_diagnostic_highlighting = 0
+"let g:ycm_enable_diagnostic_highlighting = 0
 " let g:ycm_seed_identifiers_with_syntax = 1
 let g:ycm_always_populate_location_list = 1
 let g:ycm_collect_identifiers_from_tags_files = 1
