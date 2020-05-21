@@ -1,4 +1,5 @@
 syntax on
+filetype indent on
 set nocompatible
 set hidden
 set backup
@@ -23,12 +24,9 @@ call vundle#begin()
   Plugin 'airblade/vim-rooter'
   Plugin 'tfnico/vim-gradle'
   Plugin 'dragfire/Improved-Syntax-Highlighting-Vim'
-  Plugin 'taketwo/vim-ros'
-  Plugin 'szymonmaszke/vimpyter'
   Plugin 'VundleVim/Vundle.vim'
   Plugin 'tpope/vim-fugitive'
   Plugin 'vim-syntastic/syntastic'
-  Plugin 'vim-scripts/Arduino-syntax-file'
   Plugin 'octol/vim-cpp-enhanced-highlight'
   Plugin 'Valloric/YouCompleteMe'
   Plugin 'SirVer/ultisnips'
@@ -39,8 +37,6 @@ call vundle#begin()
   Plugin 'bling/vim-bufferline'
   Plugin 'chriskempson/base16-vim'
   Plugin 'Yggdroot/indentLine'
-  Plugin 'sudar/vim-arduino-syntax'
-  Plugin 'sudar/vim-arduino-snippets'
 
  
 call vundle#end()
@@ -131,10 +127,10 @@ let g:ycm_server_log_level = 'debug'
 let g:ycm_warning_symbol = '⚠'
 let g:ycm_error_symbol = '✗'
 let g:ycm_server_use_vim_stdout = 1
-let g:ycm_global_ycm_extra_conf='~/.vim/.ycm_extra_conf1.py'
+let g:ycm_global_ycm_extra_conf='~/.vim/.ycm_extra_conf.py'
 let g:ycm_autoclose_preview_window_after_insertion = 1
 "let g:ycm_enable_diagnostic_highlighting = 0
-" let g:ycm_seed_identifiers_with_syntax = 1
+"let g:ycm_seed_identifiers_with_syntax = 1
 let g:ycm_always_populate_location_list = 1
 let g:ycm_collect_identifiers_from_tags_files = 1
 
@@ -201,18 +197,21 @@ map <C-v> "+p
 highlight Comment cterm=italic
 
 " c/cpp specific bindings
-if &filetype ==# 'c' || &filetype ==# 'cpp'
-  map <leader>r :w <CR> :!clear <CR> :!clang++ -lm % -o %<_out && ./%<_out <CR>
-  map <leader>m :w <CR> :!clear; cmake .; make; clear<CR> :!./%<_out
-  map <leader>b :w <CR> :!clear; cmake .; make; clear<CR><CR>
-  map <leader>s :w <CR> :!clear; python3 submit.py %; clear <CR><CR>
-  map <leader>t :w <CR> :!clear; python3 test.py %<<CR>
-endif
+autocmd FileType cpp nnoremap <buffer> <leader>r :w <CR> :!clear <CR> :!clang++ -lm % -o %<_out && ./%<_out <CR>
+autocmd FileType cpp nnoremap <buffer> <leader>m :w <CR> :!clear; cmake .; make; clear<CR> :!./%<_out
+autocmd FileType cpp nnoremap <buffer> <leader>b :w <CR> :!clear; cmake .; make; clear<CR><CR>
+autocmd FileType cpp nnoremap <buffer> <leader>s :w <CR> :!clear; python3 submit.py %; clear <CR><CR>
+autocmd FileType cpp nnoremap <buffer> <leader>t :w <CR> :!clear; python3 test.py %<<CR>
+autocmd FileType cpp nnoremap <buffer> <leader>d :w <CR> :!clear <CR> :!g++ -g % -o %<_out <CR> :!gdb %<_out <CR>
+
+autocmd FileType c nnoremap <buffer> <leader>r :w <CR> :!clear <CR> :!gcc -g % -o %< <CR> :!./%< < 
+autocmd FileType c nnoremap <buffer> <leader>d :w <CR> :!clear <CR> :!gcc -g % -o %< <CR> :!gdb %< <CR>
+
 
 " java specific bindings
-autocmd FileType java map <leader>r :w <CR> :!clear <CR> :compiler gradlew <CR> :make run <CR>
-autocmd FileType java map <leader>c :w <CR> :!clear <CR> :compiler gradlew <CR> :make build <CR>
-autocmd FileType java map <leader>t :w <CR> :!clear <CR> :compiler gradlew <CR> :make test <CR>
+autocmd FileType java nnoremap <buffer> <leader>r :w <CR> :!clear <CR> :compiler gradlew <CR> :make run <CR>
+autocmd FileType java nnoremap <buffer> <leader>c :w <CR> :!clear <CR> :compiler gradlew <CR> :make build <CR>
+autocmd FileType java nnoremap <buffer> <leader>t :w <CR> :!clear <CR> :compiler gradlew <CR> :make test <CR>
 
 if has('python')
 endif
