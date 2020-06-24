@@ -1,45 +1,51 @@
 syntax on
 filetype indent on
+
+set noerrorbells
 set nocompatible
 set hidden
-set backup
-set backupdir=~/.backups
-set number
+set nobackup
+set noswapfile
+set undodir=~/.undodir
+set undofile
+set number rnu
 set ruler
 set autoindent
 set smartindent
 set shiftwidth=4
-set tabstop=4
+set tabstop=4 softtabstop=4
+set smartcase
+set incsearch
 set expandtab
 set nowrap
-set backspace=2
+"set backspace=2
+set foldmethod=indent
+set nofoldenable
+set shortmess+=c
 
 filetype off
 
 
-set rtp+=~/.vim/bundle/Vundle.vim
-
-call vundle#begin()
+call plug#begin()
   
-  Plugin 'airblade/vim-rooter'
-  Plugin 'tfnico/vim-gradle'
-  Plugin 'dragfire/Improved-Syntax-Highlighting-Vim'
-  Plugin 'VundleVim/Vundle.vim'
-  Plugin 'tpope/vim-fugitive'
-  Plugin 'vim-syntastic/syntastic'
-  Plugin 'octol/vim-cpp-enhanced-highlight'
-  Plugin 'Valloric/YouCompleteMe'
-  Plugin 'SirVer/ultisnips'
-  Plugin 'honza/vim-snippets'
-  Plugin 'Raimondi/delimitMate'
-  Plugin 'rafi/awesome-vim-colorschemes'
-  Plugin 'scrooloose/nerdcommenter'
-  Plugin 'bling/vim-bufferline'
-  Plugin 'chriskempson/base16-vim'
-  Plugin 'Yggdroot/indentLine'
+  Plug 'airblade/vim-rooter'
+  "Plug 'vhda/verilog_systemverilog.vim'
+  Plug 'neoclide/coc.nvim', {'branch': 'release'}
+  Plug 'junegunn/fzf', { 'do': { -> fzf#install()  }  }
+  Plug 'junegunn/fzf.vim'
+  Plug 'sheerun/vim-polyglot'
+  Plug 'vim-utils/vim-man'
+  Plug 'VundleVim/Vundle.vim'
+  Plug 'tpope/vim-fugitive'
+  Plug 'Raimondi/delimitMate'
+  Plug 'rafi/awesome-vim-colorschemes'
+  Plug 'scrooloose/nerdcommenter'
+  Plug 'bling/vim-bufferline'
+  Plug 'Yggdroot/indentLine'
+  Plug 'mbbill/undotree'
+  Plug 'honza/vim-snippets'
 
- 
-call vundle#end()
+call plug#end()
 
 filetype plugin on
 
@@ -51,6 +57,10 @@ set wildmenu
 
 " Create 'tags' file (may need to install ctags first)
 command! MakeTags !ctags -R .
+
+nnoremap <C-p> :GFiles<CR>
+nnoremap <Leader>pf :Files<CR>
+nnoremap <leader>pv :wincmd v<bar> :Ex <bar> :vertical resize 30<CR>
 
 " Above enabled commads
 " ^] to jump to tag under cursor
@@ -87,32 +97,8 @@ set statusline+=%{fugitive#statusline()}\
 set statusline+=[%{strlen(&fenc)?&fenc:&enc}]
 set statusline+=\ [line\ %l\/%L]
 set statusline=\ %f%m%r%h%w\ %=%({%{&ff}\|%{(&fenc==\"\"?&enc:&fenc).((exists(\"+bomb\")\ &&\ &bomb)?\",B\":\"\")}%k\|%Y}%)\ %([%l,%v][%p%%]\ %)
+
 let g:bufferline_echo = 1
-
-
-"For syntastic
-let g:syntastic_error_symbol = '✗'
-let g:syntastic_warning_symbol = '⚠'
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 0
-let g:syntastic_check_on_wq = 0
-
-let g:syntastic_c_checkers = [ 'clang_tidy', 'clang' ]
-let g:syntastic_c_compiler = 'clang'
-let g:syntastic_c_clang_args = '-Wall -Werror -Wextra -Iinclude'
-let g:syntastic_c_clang_tidy_args = '-checks=*'
-let g:syntastic_c_compiler_options = '-Wall -Iinclude'
-let g:syntastic_c_include_dirs = [ '../include', 'include' ]
-let g:syntastic_c_clang_tidy_post_args = ""
-
-let g:syntastic_java_checkers = [ "checkstyle" ]
-let g:syntastic_java_checkstyle_classpath = "~/checkstyle-8.23-all.jar"
-let g:syntastic_java_checkstyle_conf_file = "~/checkstyle.xml"
-let g:syntastic_mode_map = { 'mode': 'passive',
-                            \ 'active_filetypes': ['python'],
-                            \ 'passive_filetypes': ['html', 'javascript', 'c', 'c++', 'java'] }
-
 
 " C/C++ syntax highlighting
 let g:cpp_class_scope_highlight=1
@@ -121,65 +107,13 @@ let g:cpp_class_dec1_highlight=1
 let g:cpp_experimental_template_highlight=1
 let g:cpp_concepts_highlight=1
 
-" YCM
-let g:ycm_server_keep_logfiles = 1
-let g:ycm_server_log_level = 'debug'
-let g:ycm_warning_symbol = '⚠'
-let g:ycm_error_symbol = '✗'
-let g:ycm_server_use_vim_stdout = 1
-let g:ycm_global_ycm_extra_conf='~/.vim/.ycm_extra_conf.py'
-let g:ycm_autoclose_preview_window_after_insertion = 1
-"let g:ycm_enable_diagnostic_highlighting = 0
-"let g:ycm_seed_identifiers_with_syntax = 1
-let g:ycm_always_populate_location_list = 1
-let g:ycm_collect_identifiers_from_tags_files = 1
-
-let g:ycm_semantic_triggers = {
-\   'roslaunch' : ['="', '$(', '/'],
-\   'rosmsg,rossrv,rosaction' : ['re!^', '/'],
-\ }
 " Delimitmate settings
-let g:delimitMate_expand_space = 1
-let g:delimitMate_expand_cr = 2
-
-" YouCompleteMe and UltiSnips compatibility
-function! g:UltiSnips_Complete()
-  call UltiSnips#ExpandSnippet()
-  if g:ulti_expand_res == 0
-    if pumvisible()
-      return "\<C-n>"
-    else
-      call UltiSnips#JumpForwards()
-      if g:ulti_jump_forwards_res == 0
-        return "\<TAB>"
-      endif
-    endif
-  endif
-  return ""
-endfunction
-
-function! g:UltiSnips_Reverse()
-  call UltiSnips#JumpBackwards()
-  if g:ulti_jump_backwards_res == 0
-    return "\<C-P>"
-  endif
-  return ""
-endfunction
-
-if !exists("g:UltiSnipsJumpForwardTrigger")
-  let g:UltiSnipsJumpForwardTrigger="<tab>"
-endif
-
-if !exists("g:UltiSnipsJumpBackwardTrigger")
-  let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
-endif
-  
-au InsertEnter * exec "inoremap <silent> " . g:UltiSnipsExpandTrigger     . " <C-R>=g:UltiSnips_Complete()<cr>"
-au InsertEnter * exec "inoremap <silent> " .     g:UltiSnipsJumpBackwardTrigger . " <C-R>=g:UltiSnips_Reverse()<cr>"
-
-imap <expr> <CR> pumvisible()
-  \ ? "\<C-Y>"
-  \ : "<Plug>delimitMateCR"
+"let g:delimitMate_expand_space = 1
+"let g:delimitMate_expand_cr =
+let g:loaded_delimitMate = 1
+"imap <expr> <CR> pumvisible()
+  "\ ? "\<C-Y>"
+  "\ : "<Plug>delimitMateCR"
 
 " Pasting
 let s:clip = '/mnt/c/Windows/System32/clip.exe' 
@@ -191,7 +125,7 @@ if executable(s:clip)
 end
 
 map <silent> "+p :r !powershell.exe -Command Get-Clipboard<CR>"
-map <C-v> "+p
+map <leader>v "+p
 
 " Set comments italic
 highlight Comment cterm=italic
@@ -216,3 +150,69 @@ autocmd FileType java nnoremap <buffer> <leader>t :w <CR> :!clear <CR> :compiler
 if has('python')
 endif
 
+if &term =~ '256color'
+      " disable Background Color Erase (BCE) so that color schemes
+      " render properly when inside 256-color tmux and GNU screen.
+      " see also http://snk.tuxfamily.org/log/vim-256color-bce.html
+    set t_ut=
+endif
+
+let g:go_highlight_build_constraints = 1
+let g:go_highlight_extra_types = 1
+let g:go_highlight_fields = 1
+let g:go_highlight_functions = 1
+let g:go_highlight_methods = 1
+let g:go_highlight_operators = 1
+let g:go_highlight_structs = 1
+let g:go_highlight_types = 1
+let g:go_highlight_function_parameters = 1
+let g:go_highlight_function_calls = 1
+let g:go_highlight_generate_tags = 1
+let g:go_highlight_format_strings = 1
+let g:go_highlight_variable_declarations = 1
+let g:go_auto_sameids = 1
+
+nmap <silent>gd <Plug>(coc-definition)
+nmap <silent>gy <Plug>(coc-type-definition)
+nmap <silent>gi <Plug>(coc-implementation)
+nmap <silent>gr <Plug>(coc-references)
+nmap <silent>rr <Plug>(coc-rename)
+nmap <silent>g[ <Plug>(coc-diagnostic-prev)
+nmap <silent>g] <Plug>(coc-diagnostic-next)
+nmap <silent> <leader>gp <Plug>(coc-diagnostic-prev-error)
+nmap <silent> <leader>gn <Plug>(coc-diagnostic-next-error)
+nnoremap <leader>cr :CocRestart
+
+" Sweet Sweet FuGITive
+nmap <leader>gh :diffget //3<CR>
+nmap <leader>gu :diffget //2<CR>
+nmap <leader>gs :G<CR>
+
+"function! s:check_back_space() abort
+    "let col = col('.') - 1
+    "return !col || getline('.')[col - 1]  =~# '\s'
+"endfunction
+
+inoremap <silent><expr> <TAB>
+            \ pumvisible() ? "\<C-n>" :
+            \ <SID>check_back_space() ? "\<TAB>" :
+            \ coc#refresh()
+
+"inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+"inoremap <silent><expr> <C-space> coc#refresh()
+
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? coc#_select_confirm() :
+      \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+let g:coc_snippet_next = '<C-j>'
+let g:coc_snippet_prev = '<c-k>'
+
+let g:polyglot_disabled = ['csv']
