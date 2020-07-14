@@ -1,6 +1,7 @@
 syntax on
 filetype indent on
 
+set nopaste
 set noerrorbells
 set nocompatible
 set hidden
@@ -22,6 +23,8 @@ set nowrap
 set foldmethod=indent
 set nofoldenable
 set shortmess+=c
+if has('python3')
+endif
 
 filetype off
 
@@ -35,7 +38,6 @@ call plug#begin()
   Plug 'junegunn/fzf.vim'
   Plug 'sheerun/vim-polyglot'
   Plug 'vim-utils/vim-man'
-  Plug 'VundleVim/Vundle.vim'
   Plug 'tpope/vim-fugitive'
   Plug 'Raimondi/delimitMate'
   Plug 'rafi/awesome-vim-colorschemes'
@@ -59,6 +61,7 @@ set wildmenu
 command! MakeTags !ctags -R .
 
 nnoremap <C-p> :GFiles<CR>
+nnoremap <C-@> :Files<CR>
 nnoremap <Leader>pf :Files<CR>
 nnoremap <leader>pv :wincmd v<bar> :Ex <bar> :vertical resize 30<CR>
 
@@ -116,15 +119,6 @@ let g:loaded_delimitMate = 1
   "\ : "<Plug>delimitMateCR"
 
 " Pasting
-let s:clip = '/mnt/c/Windows/System32/clip.exe' 
-if executable(s:clip)
-    augroup WSLYank
-        autocmd!
-        autocmd TextYankPost * call system('echo '.shellescape(join(v:event.regcontents, "\<CR>")).' | '.s:clip)
-    augroup END
-end
-
-map <silent> "+p :r !powershell.exe -Command Get-Clipboard<CR>"
 map <leader>v "+p
 
 " Set comments italic
@@ -188,18 +182,10 @@ nmap <leader>gh :diffget //3<CR>
 nmap <leader>gu :diffget //2<CR>
 nmap <leader>gs :G<CR>
 
-"function! s:check_back_space() abort
-    "let col = col('.') - 1
-    "return !col || getline('.')[col - 1]  =~# '\s'
-"endfunction
-
 inoremap <silent><expr> <TAB>
             \ pumvisible() ? "\<C-n>" :
             \ <SID>check_back_space() ? "\<TAB>" :
             \ coc#refresh()
-
-"inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-"inoremap <silent><expr> <C-space> coc#refresh()
 
 inoremap <silent><expr> <TAB>
       \ pumvisible() ? coc#_select_confirm() :
