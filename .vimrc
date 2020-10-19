@@ -19,33 +19,39 @@ set smartcase
 set incsearch
 set expandtab
 set nowrap
-"set backspace=2
 set foldmethod=indent
 set nofoldenable
 set shortmess+=c
+vnoremap . :normal .<CR>
+
 if has('python3')
 endif
 
 filetype off
 
+let g:polyglot_disabled = ['csv']
+
 
 call plug#begin()
   
   Plug 'airblade/vim-rooter'
-  "Plug 'vhda/verilog_systemverilog.vim'
+  Plug 'ianding1/leetcode.vim'
   Plug 'neoclide/coc.nvim', {'branch': 'release'}
   Plug 'junegunn/fzf', { 'do': { -> fzf#install()  }  }
   Plug 'junegunn/fzf.vim'
   Plug 'sheerun/vim-polyglot'
   Plug 'vim-utils/vim-man'
   Plug 'tpope/vim-fugitive'
-  Plug 'Raimondi/delimitMate'
   Plug 'rafi/awesome-vim-colorschemes'
   Plug 'scrooloose/nerdcommenter'
   Plug 'bling/vim-bufferline'
   Plug 'Yggdroot/indentLine'
   Plug 'mbbill/undotree'
   Plug 'honza/vim-snippets'
+  "Plug 'ying17zi/vim-live-latex-preview'
+  Plug 'lervag/vimtex'
+  Plug 'kovetskiy/sxhkd-vim'
+  Plug 'mattn/emmet-vim'
 
 call plug#end()
 
@@ -59,6 +65,7 @@ set wildmenu
 
 " Create 'tags' file (may need to install ctags first)
 command! MakeTags !ctags -R .
+command Sw :execute ':silent w !sudo tee % > /dev/null' | :edit!
 
 nnoremap <C-p> :GFiles<CR>
 nnoremap <C-@> :Files<CR>
@@ -90,8 +97,8 @@ noremap <Left> <Nop>
 noremap <Right> <Nop>
 
 " Color scheme
-set termguicolors
 colo ayu
+set termguicolors
 
 " statusline
 set laststatus=2
@@ -113,7 +120,7 @@ let g:cpp_concepts_highlight=1
 " Delimitmate settings
 "let g:delimitMate_expand_space = 1
 "let g:delimitMate_expand_cr =
-let g:loaded_delimitMate = 1
+"let g:loaded_delimitMate = 1
 "imap <expr> <CR> pumvisible()
   "\ ? "\<C-Y>"
   "\ : "<Plug>delimitMateCR"
@@ -131,25 +138,30 @@ autocmd FileType cpp nnoremap <buffer> <leader>b :w <CR> :!clear; cmake .; make;
 autocmd FileType cpp nnoremap <buffer> <leader>s :w <CR> :!clear; python3 submit.py %; clear <CR><CR>
 autocmd FileType cpp nnoremap <buffer> <leader>t :w <CR> :!clear; python3 test.py %<<CR>
 autocmd FileType cpp nnoremap <buffer> <leader>d :w <CR> :!clear <CR> :!g++ -g % -o %<_out <CR> :!gdb %<_out <CR>
+autocmd FileType cpp nnoremap <leader>lt :LeetCodeTest<cr>
+autocmd FileType cpp nnoremap <leader>ls :LeetCodeSubmit<cr>
 
 autocmd FileType c nnoremap <buffer> <leader>r :w <CR> :!clear <CR> :!gcc -g % -o %< <CR> :!./%< < 
 autocmd FileType c nnoremap <buffer> <leader>d :w <CR> :!clear <CR> :!gcc -g % -o %< <CR> :!gdb %< <CR>
 
+autocmd BufReadPre *.doc set ro
+autocmd BufReadPre *.doc set hlsearch!
+autocmd BufReadPost *.doc %!docx2text "%"
 
 " java specific bindings
 autocmd FileType java nnoremap <buffer> <leader>r :w <CR> :!clear <CR> :compiler gradlew <CR> :make run <CR>
 autocmd FileType java nnoremap <buffer> <leader>c :w <CR> :!clear <CR> :compiler gradlew <CR> :make build <CR>
 autocmd FileType java nnoremap <buffer> <leader>t :w <CR> :!clear <CR> :compiler gradlew <CR> :make test <CR>
 
-if has('python')
-endif
+" Python specific bindings
+autocmd FileType python nnoremap <buffer> <leader>r :w <CR> :!clear; python % <CR>
 
-if &term =~ '256color'
-      " disable Background Color Erase (BCE) so that color schemes
-      " render properly when inside 256-color tmux and GNU screen.
-      " see also http://snk.tuxfamily.org/log/vim-256color-bce.html
-    set t_ut=
-endif
+autocmd BufRead,BufNewFile *.svb set ft=vbnet
+
+" latex specific bindings
+autocmd Filetype tex autocmd BufUnload <buffer> VimtexClean
+
+autocmd Filetype go nnoremap <buffer> <leader>r :w <CR> :!clear <CR> :!go run % <CR>
 
 let g:go_highlight_build_constraints = 1
 let g:go_highlight_extra_types = 1
@@ -166,6 +178,12 @@ let g:go_highlight_format_strings = 1
 let g:go_highlight_variable_declarations = 1
 let g:go_auto_sameids = 1
 
+" Sweet Sweet FuGITive
+nmap <leader>gh :diffget //3<CR>
+nmap <leader>gu :diffget //2<CR>
+nmap <leader>gs :G<CR>
+
+" Coc settings
 nmap <silent>gd <Plug>(coc-definition)
 nmap <silent>gy <Plug>(coc-type-definition)
 nmap <silent>gi <Plug>(coc-implementation)
@@ -176,11 +194,6 @@ nmap <silent>g] <Plug>(coc-diagnostic-next)
 nmap <silent> <leader>gp <Plug>(coc-diagnostic-prev-error)
 nmap <silent> <leader>gn <Plug>(coc-diagnostic-next-error)
 nnoremap <leader>cr :CocRestart
-
-" Sweet Sweet FuGITive
-nmap <leader>gh :diffget //3<CR>
-nmap <leader>gu :diffget //2<CR>
-nmap <leader>gs :G<CR>
 
 inoremap <silent><expr> <TAB>
             \ pumvisible() ? "\<C-n>" :
@@ -201,4 +214,27 @@ endfunction
 let g:coc_snippet_next = '<C-j>'
 let g:coc_snippet_prev = '<c-k>'
 
-let g:polyglot_disabled = ['csv']
+" Vim transparency
+let t:is_transparent = 1
+hi Normal guibg=NONE ctermbg=NONE
+highlight LineNr guifg=grey30
+
+function! Toggle_transparent()
+    if t:is_transparent == 0
+        hi Normal guibg=NONE ctermbg=NONE
+        let t:is_transparent = 1
+        highlight LineNr guifg=grey30
+    else
+        set background=dark
+        let t:is_transparent = 0
+    endif
+endfunction
+
+let g:tex_flavor="latex"
+let g:vimtex_parser_bib_backend="biber"
+
+nnoremap <Tab> :bnext<CR>
+nnoremap <S-Tab> :bprevious<CR>
+let g:leetcode_browser = 'firefox'
+
+let g:tex_conceal = ''
