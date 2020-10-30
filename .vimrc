@@ -22,6 +22,8 @@ set nowrap
 set foldmethod=indent
 set nofoldenable
 set shortmess+=c
+set timeoutlen=1000 ttimeoutlen=0
+set cul
 vnoremap . :normal .<CR>
 
 if has('python3')
@@ -91,10 +93,10 @@ let g:netrw_list_hide.=',\(^\|\s\s\)\zs\.\S\+'
 " :cn and :cp to navigate forward and back
 
 " Remove arrow keys
-noremap <Up> <Nop>
-noremap <Down> <Nop>
-noremap <Left> <Nop>
-noremap <Right> <Nop>
+"noremap <Up> <Nop>
+"noremap <Down> <Nop>
+"noremap <Left> <Nop>
+"noremap <Right> <Nop>
 
 " Color scheme
 colo ayu
@@ -127,9 +129,21 @@ let g:cpp_concepts_highlight=1
 
 " Pasting
 map <leader>v "+p
+map <leader>y "+y
 
 " Set comments italic
 highlight Comment cterm=italic
+
+" Cursor change
+autocmd VimEnter * silent exec "! echo -ne '\e[1 q'"
+autocmd VimLeave * silent exec "! echo -ne '\e[5 q'" 
+let &t_SI = "\033[5 q"
+let &t_SR = "\033[1 q"
+let &t_EI = "\033[1 q"
+
+" txt files
+autocmd BufRead,BufNewFile *.txt set wrap 
+autocmd BufRead,BufNewFile *.txt set linebreak
 
 " c/cpp specific bindings
 autocmd FileType cpp nnoremap <buffer> <leader>r :w <CR> :!clear <CR> :!clang++ -lm % -o %<_out && ./%<_out <CR>
