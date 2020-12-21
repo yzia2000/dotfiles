@@ -1,0 +1,19 @@
+[submodule ".config/dwm"] 
+  path = .config/dwm
+  url = git@github.com:yzia2000/dwm-yousuf.git
+
+[submodule ".config/dmenu"] 
+  path = .config/dmenu
+  url = git@github.com:yzia2000/dmenu-yousuf.git
+
+[submodule ".config/st"] 
+  path = .config/st
+  url = git@github.com:yzia2000/st-yousuf.git
+
+[submodule ".config/slstatus"] 
+  path = .config/slstatus
+  url = git@github.com:yzia2000/slstatus-yousuf.git
+
+[submodule ".config/dsblocks"] 
+  path = .config/dsblocks
+  url = git@github.com:yzia2000/dsblocks.git
