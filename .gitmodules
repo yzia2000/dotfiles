@@ -17,3 +17,7 @@
 [submodule ".config/dsblocks"] 
   path = .config/dsblocks
   url = git@github.com:yzia2000/dsblocks.git
+
+[submodule ".config/slock"] 
+  path = .config/slock
+  url = git@github.com:yzia2000/slock-yousuf.git
