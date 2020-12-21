@@ -21,7 +21,7 @@ Linux Dotfiles
 7. sxhkd
 8. zathura
 
-# Installation (credits ![Atlassian Blog](https://www.atlassian.com/git/tutorials/dotfiles))
+# Installation (credits [Atlassian Blog](https://www.atlassian.com/git/tutorials/dotfiles))
 1. Add alias for bare repo config
 ```
 alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
