@@ -1,0 +1,15 @@
+#! /bin/sh
+
+script_name=${BASH_SOURCE[0]}
+for pid in $(pidof -x $script_name); do
+    if [ $pid != $$ ]; then
+        kill -9 $pid
+    fi 
+done
+
+bspc subscribe monitor_remove | while read msg ; do
+	bspc config -m eDP1 top_padding 27 
+	xsetwacom set "Wacom HID 5113 Pen stylus" MapToOutput eDP1
+	xsetwacom set "Wacom HID 5113 Pen eraser" MapToOutput eDP1
+	xsetwacom set "Wacom HID 5113 Finger touch" MapToOutput eDP1
+done

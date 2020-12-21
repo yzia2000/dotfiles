@@ -1,0 +1,32 @@
+#! /bin/sh
+
+script_name=${BASH_SOURCE[0]}
+for pid in $(pidof -x $script_name); do
+    if [ $pid != $$ ]; then
+        kill -9 $pid
+    fi 
+done
+
+MON_ID=$(bspc query -M -m "$1")
+MON_POS="$2"
+
+[ $(bspc query -M -m "$MON_POS") != "$MON_ID" ] && bspc monitor "$MON_POS" -s "$MON_ID"
+
+bspc subscribe monitor_add | while read msg ; do
+	if [ "disconnected" == "$HDMI_STATUS" ]; then
+		bspc desktop I -m eDP1
+		bspc desktop II -m eDP1
+		bspc desktop III -m eDP1
+		bspc desktop IV -m eDP1
+		bspc desktop V -m eDP1
+		bspc monitor DP2 -r
+		bspc monitor eDP1 -d I II III IV V
+		notify-send $extern disconnected
+		[ $(bspc query -M -m "$MON_POS") != "$MON_ID" ] && bspc monitor "$MON_POS" -s "$MON_ID"
+	else
+		bspc monitor eDP1 -d VI VII VIII IX X
+		bspc monitor DP2 -d I II III IV V
+		notify-send $extern connected
+		[ $(bspc query -M -m "$MON_POS") != "$MON_ID" ] && bspc monitor "$MON_POS" -s "$MON_ID"
+	fi
+done

@@ -1,0 +1,18 @@
+#!/bin/bash
+
+bspc rule -r "*"
+
+bspc rule -a Xfce4-appfinder state=floating
+bspc rule -a Xfce4-panel state=floating
+bspc rule -a Chromium desktop='^10'
+bspc rule -a Chromium-browser desktop='^10'
+bspc rule -a Slack desktop='^7'
+bspc rule -a Brave-browser desktop='^6'
+bspc rule -a zoom desktop='^1'
+bspc rule -a Wfica desktop='^9'
+bspc rule -a Wrapper-2.0 state=floating
+bspc rule -a Xournalpp desktop='^2'
+bspc rule -a Zathura state=tiled
+bspc rule -a Zathura state=tiled
+bspc rule -a PulseUi desktop='^5' follow=on
+bspc rule -a Vivado -o desktop='^8' follow=on

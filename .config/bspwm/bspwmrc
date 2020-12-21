@@ -1,0 +1,48 @@
+#! /bin/sh
+
+killall sxhkd
+sxhkd &
+
+picom -b
+
+nm-applet &
+blueman-applet &
+
+xfce4-power-manager &
+
+xsetroot -cursor_name left_ptr
+
+bspc config remove_unplugged_monitors true
+bspc config remove_disabled_monitors true
+
+/home/yushi/.config/bspwm/monitor
+/home/yushi/.config/bspwm/monitor_add &
+/home/yushi/.config/bspwm/monitor_remove &
+
+
+bspc config normal_border_color	"4c566a"
+bspc config active_border_color	"#1e1e1e"
+bspc config focused_border_color "#406ea5"
+bspc config presel_feedback_color	"#5e81ac"
+bspc config urgent_border_color "#dd2727"
+
+bspc config border_width         2
+bspc config window_gap          12
+
+bspc config split_ratio          0.52
+bspc config borderless_monocle   true
+bspc config gapless_monocle      true
+
+xsetwacom set "Wacom HID 5113 Pen stylus" MapToOutput eDP1
+xsetwacom set "Wacom HID 5113 Pen eraser" MapToOutput eDP1
+xsetwacom set "Wacom HID 5113 Finger touch" MapToOutput eDP1
+
+/home/yushi/.config/bspwm/rules
+
+killall nitrogen
+nitrogen --restore &
+
+killall polybar
+polybar bar
+
+bspc wm --adopt-orphans

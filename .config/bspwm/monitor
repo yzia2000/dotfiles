@@ -1,0 +1,21 @@
+#!/bin/bash
+
+set -e
+pgrep X > /dev/null || exit 0
+
+intern=eDP1
+extern=DP2
+
+HDMI_STATUS=$(</sys/class/drm/card0/card0-DP-2/status )
+
+if [ "disconnected" == "$HDMI_STATUS" ]; then
+    bspc monitor eDP1 -d I II III IV V
+	bspc config -m eDP1 top_padding 27
+    notify-send $extern disconnected
+else
+    bspc monitor eDP1 -d I II III IV V
+    bspc monitor DP2 -d VI VII VIII IX X
+	bspc config -m DP2 top_padding 27
+	bspc config -m eDP1 top_padding 0 
+    notify-send $extern connected
+fi
