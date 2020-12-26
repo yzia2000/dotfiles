@@ -21,3 +21,6 @@
 [submodule ".config/slock"] 
   path = .config/slock
   url = git@github.com:yzia2000/slock-yousuf.git
+[submodule ".config/sxiv"]
+	path = .config/sxiv
+	url = git@github.com:yzia2000/sxiv.git

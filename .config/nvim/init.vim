@@ -17,7 +17,6 @@ set autoindent
 set smartindent
 set shiftwidth=4
 set tabstop=4 softtabstop=4
-set smartcase
 set incsearch
 set expandtab
 set nowrap
@@ -56,10 +55,11 @@ Plug 'mbbill/undotree'
 Plug 'lervag/vimtex'
 Plug 'mattn/emmet-vim'
 Plug 'puremourning/vimspector'
+Plug 'szw/vim-maximizer'
 
 call plug#end()
 
-command Sw :execute ':silent w !sudo tee % > /dev/null' | :edit!
+command Sw :w !sudo tee %
 
 nnoremap <C-p> :GFiles<CR>
 noremap <C-space> :Files<CR>
@@ -99,16 +99,13 @@ autocmd BufRead,BufNewFile *.txt set wrap
 autocmd BufRead,BufNewFile *.txt set linebreak
 
 " c/cpp specific bindings
-autocmd FileType cpp nnoremap <buffer> <leader>r :w <CR> :!clear <CR> :!g++ % -o %<_out && ./%<_out <CR>
-autocmd FileType cpp nnoremap <buffer> <leader>t :w <CR> :!clear <CR> :!g++ % -o %<_out <CR> :!./%<_out < 
-autocmd FileType cpp nnoremap <buffer> <leader>ks :w <CR> :!clear; python3 /home/yushi/Documents/kattis/submit.py %; clear <CR><CR>
-autocmd FileType cpp nnoremap <buffer> <leader>kt :w <CR> :!clear; python3 /home/yushi/Documents/kattis/test.py %<<CR>
-autocmd FileType cpp nnoremap <buffer> <leader>d :w <CR> :!clear <CR> :!g++ -g % -o %<_out <CR> :!gdb %<_out <CR>
+autocmd FileType cpp nnoremap <buffer> <leader>r :w <CR> :te g++ % -o %<_out && ./%<_out
+autocmd FileType cpp nnoremap <buffer> <leader>t :w <CR> :te g++ % -o %<_out && ./%<_out < 
+autocmd FileType cpp nnoremap <buffer> <leader>ks :w <CR> :te python3 /home/yushi/Documents/kattis/submit.py %
+autocmd FileType cpp nnoremap <buffer> <leader>kt :w <CR> :te python3 /home/yushi/Documents/kattis/test.py %<
 autocmd FileType cpp nnoremap <leader>lt :LeetCodeTest<cr>
 autocmd FileType cpp nnoremap <leader>ls :LeetCodeSubmit<cr>
-
-autocmd FileType c nnoremap <buffer> <leader>r :w <CR> :!clear <CR> :!gcc -g % -o %< <CR> :!./%< < 
-autocmd FileType c nnoremap <buffer> <leader>d :w <CR> :!clear <CR> :!gcc -g % -o %< <CR> :!gdb %< <CR>
+autocmd FileType c nnoremap <buffer> <leader>r :w <CR> :te gcc -g % -o %< && ./%< < 
 
 autocmd BufReadPre *.doc set ro
 autocmd BufReadPre *.doc set hlsearch!
@@ -120,7 +117,7 @@ autocmd FileType java nnoremap <buffer> <leader>c :w <CR> :!clear <CR> :compiler
 autocmd FileType java nnoremap <buffer> <leader>t :w <CR> :!clear <CR> :compiler gradlew <CR> :make test <CR>
 
 " Python specific bindings
-autocmd FileType python nnoremap <buffer> <leader>r :w <CR> :!clear; python % <CR>
+autocmd FileType python nnoremap <buffer> <leader>r :w <CR> :te python %
 
 autocmd BufRead,BufNewFile *.svb set ft=vbnet
 
@@ -178,9 +175,20 @@ let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy']
 
 lua << EOF
 require'lspconfig'.clangd.setup{ on_attach=require'completion'.on_attach }
-require'lspconfig'.jedi_language_server.setup{ on_attach=require'completion'.on_attach }
-require'lspconfig'.gopls.setup{ on_attach=require'completion'.on_attach }
+require'lspconfig'.pyls.setup{ on_attach=require'completion'.on_attach }
 require'lspconfig'.tsserver.setup{ on_attach=require'completion'.on_attach }
+require'lspconfig'.gopls.setup{ 
+    on_attach = require'completion'.on_attach,
+    cmd = {"gopls", "serve"},
+    settings = {
+      gopls = {
+        analyses = {
+          unusedparams = true,
+        },
+        staticcheck = true,
+      },
+    },
+  }
 EOF
 
 nnoremap <leader>vd :lua vim.lsp.buf.definition()<CR>
@@ -191,3 +199,15 @@ nnoremap <leader>vrn :lua vim.lsp.buf.rename()<CR>
 nnoremap <leader>vh :lua vim.lsp.buf.hover()<CR>
 nnoremap <leader>vca :lua vim.lsp.buf.code_action()<CR>
 nnoremap <leader>vsd :lua vim.lsp.util.show_line_diagnostics(); vim.lsp.util.show_line_diagnostics()<CR>
+nnoremap <leader>vfm :lua vim.lsp.buf.formatting()<CR>
+
+nnoremap <leader>dd :call vimspector#Launch()<CR>
+nnoremap <leader>dtcb :call vimspector#CleanLineBreakpoint()<CR>
+nmap <leader>dl <Plug>VimspectorStepInto
+nmap <leader>dj <Plug>VimspectorStepOver
+nmap <leader>dk <Plug>VimspectorStepOut
+nmap <leader>d_ <Plug>VimspectorRestart
+nnoremap <leader>d<space> :call vimspector#Continue()<CR>
+nmap <leader>drc <Plug>VimspectorRunToCursor
+nmap <leader>dbp <Plug>VimspectorToggleBreakpoint
+nmap <leader>dcbp <Plug>VimspectorToggleConditionalBreakpoint
