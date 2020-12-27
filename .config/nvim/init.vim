@@ -56,6 +56,8 @@ Plug 'lervag/vimtex'
 Plug 'mattn/emmet-vim'
 Plug 'puremourning/vimspector'
 Plug 'szw/vim-maximizer'
+Plug 'SirVer/ultisnips'
+Plug 'honza/vim-snippets'
 
 call plug#end()
 
@@ -126,6 +128,8 @@ autocmd Filetype tex autocmd BufUnload <buffer> VimtexClean
 
 autocmd Filetype go nnoremap <buffer> <leader>r :w <CR> :!clear <CR> :!go run % <CR>
 
+" Setup for all files
+
 let g:go_highlight_build_constraints = 1
 let g:go_highlight_extra_types = 1
 let g:go_highlight_fields = 1
@@ -171,24 +175,21 @@ let g:leetcode_browser = 'firefox'
 
 let g:tex_conceal = ''
 
+let g:completion_enable_snippet = 'UltiSnips'
 let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy']
-
+au BufEnter * lua require'completion'.on_attach()
+let g:completion_chain_complete_list = [
+            \{'complete_items': ['lsp', 'snippet', 'path']},
+            \{'mode': '<c-p>'},
+            \{'mode': '<c-n>'}
+            \]
+let g:completion_auto_change_source = 1
 lua << EOF
-require'lspconfig'.clangd.setup{ on_attach=require'completion'.on_attach }
-require'lspconfig'.pyls.setup{ on_attach=require'completion'.on_attach }
-require'lspconfig'.tsserver.setup{ on_attach=require'completion'.on_attach }
-require'lspconfig'.gopls.setup{ 
-    on_attach = require'completion'.on_attach,
-    cmd = {"gopls", "serve"},
-    settings = {
-      gopls = {
-        analyses = {
-          unusedparams = true,
-        },
-        staticcheck = true,
-      },
-    },
-  }
+require'lspconfig'.clangd.setup{}
+require'lspconfig'.pyls.setup{}
+require'lspconfig'.tsserver.setup{}
+require'lspconfig'.gopls.setup{}
+require'lspconfig'.vimls.setup{}
 EOF
 
 nnoremap <leader>vd :lua vim.lsp.buf.definition()<CR>
