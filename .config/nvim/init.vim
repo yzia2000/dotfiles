@@ -29,8 +29,6 @@ set noshowmode
 set completeopt=menuone,noinsert,noselect
 set signcolumn=yes
 
-let g:polyglot_disabled = ['csv']
-
 let mapleader = " "
 inoremap <C-c> <esc>
 vnoremap . :normal .<CR>
@@ -43,10 +41,13 @@ Plug 'nvim-lua/completion-nvim'
 Plug 'tjdevries/nlua.nvim'
 Plug 'tjdevries/lsp_extensions.nvim' 
 
+" Tree sitter
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend updating the parsers on update
+Plug 'nvim-treesitter/playground'
+
 Plug 'ianding1/leetcode.vim'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install()  }  }
 Plug 'junegunn/fzf.vim'
-Plug 'sheerun/vim-polyglot'
 Plug 'vim-utils/vim-man'
 Plug 'tpope/vim-fugitive'
 Plug 'rafi/awesome-vim-colorschemes'
@@ -178,19 +179,22 @@ let g:tex_conceal = ''
 let g:completion_enable_snippet = 'UltiSnips'
 let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy']
 au BufEnter * lua require'completion'.on_attach()
-let g:completion_chain_complete_list = [
-            \{'complete_items': ['lsp', 'snippet', 'path']},
-            \{'mode': '<c-p>'},
-            \{'mode': '<c-n>'}
-            \]
+let g:completion_chain_complete_list = {
+            \   'tex' : [
+            \       {'complete_items': ['snippet', 'path' ]},
+            \       {'mode' : 'omni'}
+            \   ],
+            \   'default' : {
+            \       'default' : [
+            \           {'complete_items': ['lsp', 'snippet', 'path' ]},
+            \           {'mode': '<c-p>'},
+            \           {'mode': '<c-n>'},
+            \       ]
+            \   }
+            \}
 let g:completion_auto_change_source = 1
-lua << EOF
-require'lspconfig'.clangd.setup{}
-require'lspconfig'.pyls.setup{}
-require'lspconfig'.tsserver.setup{}
-require'lspconfig'.gopls.setup{}
-require'lspconfig'.vimls.setup{}
-EOF
+
+lua require('lspConfigs')
 
 nnoremap <leader>vd :lua vim.lsp.buf.definition()<CR>
 nnoremap <leader>vi :lua vim.lsp.buf.implementation()<CR>
@@ -212,3 +216,6 @@ nnoremap <leader>d<space> :call vimspector#Continue()<CR>
 nmap <leader>drc <Plug>VimspectorRunToCursor
 nmap <leader>dbp <Plug>VimspectorToggleBreakpoint
 nmap <leader>dcbp <Plug>VimspectorToggleConditionalBreakpoint
+
+" Tree sitter
+lua require'nvim-treesitter.configs'.setup { highlight = { enable = true } }
