@@ -4,4 +4,4 @@ map J zoom out
 set sandbox none
 set selection-clipboard clipboard
 set synctex true
-set synctex-editor-command "code -g %{input}:%{line}"
+set synctex-editor-command "st -e nvim +%{line} %{input}"

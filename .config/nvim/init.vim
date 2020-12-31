@@ -51,12 +51,15 @@ Plug 'tpope/vim-fugitive'
 Plug 'rafi/awesome-vim-colorschemes'
 Plug 'Yggdroot/indentLine'
 Plug 'mbbill/undotree'
-Plug 'lervag/vimtex'
 Plug 'mattn/emmet-vim'
 Plug 'puremourning/vimspector'
 Plug 'szw/vim-maximizer'
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
+
+" Plug 'nvim-lua/popup.nvim'
+" Plug 'nvim-lua/plenary.nvim'
+" Plug 'nvim-telescope/telescope.nvim'
 
 call plug#end()
 
@@ -178,10 +181,6 @@ let g:completion_enable_snippet = 'UltiSnips'
 let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy']
 au BufEnter * lua require'completion'.on_attach()
 let g:completion_chain_complete_list = {
-            \   'tex' : [
-            \       {'complete_items': ['snippet', 'path' ]},
-            \       {'mode' : 'omni'}
-            \   ],
             \   'default' : {
             \       'default' : [
             \           {'complete_items': ['lsp', 'snippet', 'path' ]},
