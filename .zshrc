@@ -1,5 +1,6 @@
 # Enable colors and change prompt:
-#PS1="%B%{$fg[red]%}[%{$fg[yellow]%}%n%{$fg[green]%}@%{$fg[blue]%}%M %{$fg[magenta]%}%~%{$fg[red]%}]%{$reset_color%}$%b "
+setopt +o nomatch
+
 eval "$(starship init zsh)"
 
 # History in cache directory:

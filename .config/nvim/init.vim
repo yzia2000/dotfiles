@@ -41,9 +41,7 @@ Plug 'nvim-lua/completion-nvim'
 Plug 'tjdevries/nlua.nvim'
 Plug 'tjdevries/lsp_extensions.nvim' 
 
-" Tree sitter
-Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend updating the parsers on update
-Plug 'nvim-treesitter/playground'
+Plug 'sheerun/vim-polyglot'
 
 Plug 'ianding1/leetcode.vim'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install()  }  }
@@ -218,4 +216,31 @@ nmap <leader>dbp <Plug>VimspectorToggleBreakpoint
 nmap <leader>dcbp <Plug>VimspectorToggleConditionalBreakpoint
 
 " Tree sitter
-lua require'nvim-treesitter.configs'.setup { highlight = { enable = true } }
+" lua require'nvim-treesitter.configs'.setup { highlight = { enable = true }, indent = { enable = true } }
+
+let g:term_list = []
+
+function! s:TermAdd()
+  let term_bufname = expand('<afile>')
+  let term_bufnr = bufnr(term_bufname)
+  call add(g:term_list, term_bufnr)
+endfunction
+
+" Remove a terminal from the list.
+function! s:TermRemove()
+  let term_bufname = expand('<afile>')
+  let term_bufnr = bufnr(term_bufname)
+  let term_index = index(g:term_list, term_bufnr)
+  call remove(g:term_list, term_index)
+endfunction
+
+autocmd TermOpen * call <SID>TermAdd()
+autocmd TermClose * call <SID>TermRemove()
+
+nnoremap <leader>teu :execute "b " . g:term_list[0] <CR>
+nnoremap <leader>tei :execute "b " . g:term_list[1] <CR>
+nnoremap <leader>teo :execute "b " . g:term_list[2] <CR>
+nnoremap <leader>tep :execute "b " . g:term_list[3] <CR>
+
+nnoremap <leader>teh :bo 10sp term://$SHELL <CR>
+tnoremap <C-^> <C-\><C-n><C-^>
