@@ -35,17 +35,17 @@ vnoremap . :normal .<CR>
 
 call plug#begin()
 
+Plug 'kassio/neoterm'
+
 " Neovim lsp Plugins
 Plug 'neovim/nvim-lspconfig'
 Plug 'nvim-lua/completion-nvim'
 Plug 'tjdevries/nlua.nvim'
 Plug 'tjdevries/lsp_extensions.nvim' 
 
-Plug 'sheerun/vim-polyglot'
+" Plug 'sheerun/vim-polyglot'
 
 Plug 'ianding1/leetcode.vim'
-Plug 'junegunn/fzf', { 'do': { -> fzf#install()  }  }
-Plug 'junegunn/fzf.vim'
 Plug 'vim-utils/vim-man'
 Plug 'tpope/vim-fugitive'
 Plug 'rafi/awesome-vim-colorschemes'
@@ -56,23 +56,25 @@ Plug 'puremourning/vimspector'
 Plug 'szw/vim-maximizer'
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
+Plug 'airblade/vim-gitgutter'
 
-" Plug 'nvim-lua/popup.nvim'
-" Plug 'nvim-lua/plenary.nvim'
-" Plug 'nvim-telescope/telescope.nvim'
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend updating the parsers on update
+Plug 'nvim-treesitter/playground'
+
+Plug 'nvim-lua/popup.nvim'
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-telescope/telescope.nvim'
 
 call plug#end()
 
 command Sw :w !sudo tee %
 
-nnoremap <C-p> :GFiles<CR>
-noremap <C-space> :Files<CR>
-nnoremap <Leader>pf :Files<CR>
-nnoremap <leader>pv :wincmd v<bar> :Ex <bar> :vertical resize 30<CR>
 
 
 let g:netrw_banner=0	    " disable annoying banner
 let g:netrw_browse_split=4  " open in prior window
+let g:netrw_winsize=25      " winsize set
+let g:netrw_localrmdir='rm -r'
 let g:netrw_altv=1          " open splits to the right
 let g:netrw_liststyle=3     " tree view
 let g:netrw_list_hide=netrw_gitignore#Hide()
@@ -93,10 +95,9 @@ vnoremap <leader>p "_dP
 nnoremap <leader>Y gg"+yG
 
 " Color scheme
-colorscheme ayu
+colorscheme space-vim-dark
 set background=dark
 set termguicolors                    " Enable GUI colors for the terminal to get truecolor
-
 
 " txt files
 autocmd BufRead,BufNewFile *.txt set wrap 
@@ -153,20 +154,20 @@ nmap <leader>gu :diffget //2<CR>
 nmap <leader>gs :G<CR>
 
 " Vim transparency
-let t:is_transparent=1
-hi Normal guibg=NONE ctermbg=NONE
-highlight LineNr guifg=grey30
-
-function! Toggle_transparent()
-    if t:is_transparent == 0
-        hi Normal guibg=NONE ctermbg=NONE
-        let t:is_transparent = 1
-        highlight LineNr guifg=grey30
-    else
-        set background=dark
-        let t:is_transparent = 0
-    endif
-endfunction
+" let g:is_transparent=0
+" hi Normal guibg=NONE ctermbg=NONE
+" " highlight LineNr guifg=grey30
+" 
+" function! Toggle_transparent()
+"     if g:is_transparent == 0
+"         hi Normal guibg=NONE ctermbg=NONE
+"         let g:is_transparent = 1
+"         highlight LineNr guifg=grey30
+"     else
+"         set background=dark
+"         let g:is_transparent = 0
+"     endif
+" endfunction
 
 let g:tex_flavor="latex"
 let g:vimtex_parser_bib_backend="biber"
@@ -189,19 +190,22 @@ let g:completion_chain_complete_list = {
             \       ]
             \   }
             \}
-let g:completion_auto_change_source = 1
 
 lua require('lspConfigs')
 
-nnoremap <leader>vd :lua vim.lsp.buf.definition()<CR>
-nnoremap <leader>vi :lua vim.lsp.buf.implementation()<CR>
-nnoremap <leader>vsh :lua vim.lsp.buf.signature_help()<CR>
-nnoremap <leader>vrr :lua vim.lsp.buf.references()<CR>
-nnoremap <leader>vrn :lua vim.lsp.buf.rename()<CR>
-nnoremap <leader>vh :lua vim.lsp.buf.hover()<CR>
-nnoremap <leader>vca :lua vim.lsp.buf.code_action()<CR>
-nnoremap <leader>vsd :lua vim.lsp.util.show_line_diagnostics(); vim.lsp.util.show_line_diagnostics()<CR>
-nnoremap <leader>vfm :lua vim.lsp.buf.formatting()<CR>
+lua require('telescope').setup({defaults = {file_sorter = require('telescope.sorters').get_fzy_sorter}})
+
+nnoremap <leader>vd <cmd>lua vim.lsp.buf.definition()<CR>
+nnoremap <leader>vi <cmd>lua vim.lsp.buf.implementation()<CR>
+nnoremap <leader>vsh <cmd>lua vim.lsp.buf.signature_help()<CR>
+nnoremap <leader>vrr <cmd>lua require('telescope.builtin').lsp_references()<CR>
+nnoremap <leader>vrn <cmd>lua vim.lsp.buf.rename()<CR>
+nnoremap <leader>vh <cmd>lua vim.lsp.buf.hover()<CR>
+nnoremap <leader>vca <cmd>lua vim.lsp.buf.code_action()<CR>
+nnoremap <leader>vsd <cmd>lua vim.lsp.util.show_line_diagnostics(); vim.lsp.util.show_line_diagnostics()<CR>
+nnoremap <leader>vfm <cmd>lua vim.lsp.buf.formatting()<CR>
+nnoremap <leader>vss <cmd>lua require('telescope.builtin').lsp_document_symbols()<CR>
+nnoremap <leader>vsw <cmd>lua require('telescope.builtin').lsp_workspace_symbols()<CR>
 
 nnoremap <leader>dd :call vimspector#Launch()<CR>
 nnoremap <leader>dtcb :call vimspector#CleanLineBreakpoint()<CR>
@@ -214,32 +218,61 @@ nmap <leader>drc <Plug>VimspectorRunToCursor
 nmap <leader>dbp <Plug>VimspectorToggleBreakpoint
 nmap <leader>dcbp <Plug>VimspectorToggleConditionalBreakpoint
 
-" Tree sitter
-" lua require'nvim-treesitter.configs'.setup { highlight = { enable = true }, indent = { enable = true } }
+nnoremap <leader>pv :wincmd v<bar> :Ex <bar> :vertical resize 30<CR>
 
-let g:term_list = []
+nnoremap <leader>pw :lua require('telescope.builtin').grep_string { search = vim.fn.expand("<cword>") }<CR>
+vnoremap <leader>pw :lua require('telescope.builtin').grep_string { search = vim.fn.expand("<cword>") }<CR>
+nnoremap <leader>pb :lua require('telescope.builtin').buffers()<CR>
+nnoremap <leader>vh :lua require('telescope.builtin').help_tags()<CR>
+nnoremap <leader>ps :lua require('telescope.builtin').grep_string({ search = vim.fn.input("Grep For > ")})<CR>
+nnoremap <C-p> :lua require('telescope.builtin').git_files()<CR>
+nnoremap <Leader>pf :lua require('telescope.builtin').find_files()<CR>
+nnoremap <Leader><CR> :so ~/.config/nvim/init.vim<CR>
 
-function! s:TermAdd()
-  let term_bufname = expand('<afile>')
-  let term_bufnr = bufnr(term_bufname)
-  call add(g:term_list, term_bufnr)
-endfunction
+lua <<EOF
+require'nvim-treesitter.configs'.setup {
+  highlight = {
+    enable = true
+  },
+  indent = { 
+    enable = true 
+  },
+  incremental_selection = {
+    enable = true,
+    keymaps = {
+      init_selection = "gnn",
+      node_incremental = "grn",
+      scope_incremental = "grc",
+      node_decremental = "grm",
+    },
+  },
+}
+EOF
 
-" Remove a terminal from the list.
-function! s:TermRemove()
-  let term_bufname = expand('<afile>')
-  let term_bufnr = bufnr(term_bufname)
-  let term_index = index(g:term_list, term_bufnr)
-  call remove(g:term_list, term_index)
-endfunction
+nnoremap <leader>teu :1Ttoggle<CR>
+nnoremap <leader>tei :2Ttoggle<CR>
+nnoremap <leader>teo :3Ttoggle<CR>
+nnoremap <leader>tep :4Ttoggle<CR>
+nnoremap <leader>teca :TcloseAll<CR>
+nnoremap <Leader>rr :call neoterm#clear() \| call neoterm#exec(['!!', '', ''])<CR>
 
-autocmd TermOpen * call <SID>TermAdd()
-autocmd TermClose * call <SID>TermRemove()
+noremap <C-q> :TcloseAll<CR>
 
-nnoremap <leader>teu :execute "b " . g:term_list[0] <CR>
-nnoremap <leader>tei :execute "b " . g:term_list[1] <CR>
-nnoremap <leader>teo :execute "b " . g:term_list[2] <CR>
-nnoremap <leader>tep :execute "b " . g:term_list[3] <CR>
+nnoremap <leader>ter :Tnew <CR>
 
-nnoremap <leader>teh :bo 10sp term://$SHELL <CR>
 tnoremap <C-^> <C-\><C-n><C-^>
+tnoremap <C-q> <C-\><C-n><C-w><C-q>
+tnoremap <C-n> <C-\><C-n>
+tnoremap <C-u> <C-\><C-n><C-w><C-k>
+nnoremap <C-d> <C-w><C-j>a
+
+nnoremap <leader>hh :wincmd h<CR>
+nnoremap <leader>jj :wincmd j<CR>
+nnoremap <leader>kk :wincmd k<CR>
+nnoremap <leader>ll :wincmd l<CR>
+
+au BufEnter * set indentexpr=nvim_treesitter#indent()
+let g:neoterm_default_mod = 'botright'
+let g:neoterm_size = 10
+let g:neoterm_autoinsert = 1
+let g:neoterm_fixedsize = 1
