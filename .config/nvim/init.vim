@@ -4,7 +4,6 @@ filetype plugin indent on
 set exrc
 set nohlsearch
 set nopaste
-set smartcase
 set noerrorbells
 set hidden
 set nobackup
@@ -43,8 +42,6 @@ Plug 'nvim-lua/completion-nvim'
 Plug 'tjdevries/nlua.nvim'
 Plug 'tjdevries/lsp_extensions.nvim' 
 
-" Plug 'sheerun/vim-polyglot'
-
 Plug 'ianding1/leetcode.vim'
 Plug 'vim-utils/vim-man'
 Plug 'tpope/vim-fugitive'
@@ -55,6 +52,7 @@ Plug 'mattn/emmet-vim'
 Plug 'puremourning/vimspector'
 Plug 'szw/vim-maximizer'
 Plug 'SirVer/ultisnips'
+Plug 'vuciv/vim-bujo'
 Plug 'honza/vim-snippets'
 Plug 'airblade/vim-gitgutter'
 
@@ -172,8 +170,6 @@ nmap <leader>gs :G<CR>
 let g:tex_flavor="latex"
 let g:vimtex_parser_bib_backend="biber"
 
-nnoremap <Tab> :bnext<CR>
-nnoremap <S-Tab> :bprevious<CR>
 let g:leetcode_browser = 'firefox'
 
 let g:tex_conceal = ''
@@ -181,15 +177,15 @@ let g:tex_conceal = ''
 let g:completion_enable_snippet = 'UltiSnips'
 let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy']
 au BufEnter * lua require'completion'.on_attach()
-let g:completion_chain_complete_list = {
-            \   'default' : {
-            \       'default' : [
-            \           {'complete_items': ['lsp', 'snippet', 'path' ]},
-            \           {'mode': '<c-p>'},
-            \           {'mode': '<c-n>'},
-            \       ]
-            \   }
-            \}
+" let g:completion_chain_complete_list = {
+"             \   'default' : {
+"             \       'default' : [
+"             \           {'complete_items': ['lsp', 'snippet', 'path' ]},
+"             \           {'mode': '<c-p>'},
+"             \           {'mode': '<c-n>'},
+"             \       ]
+"             \   }
+"             \}
 
 lua require('lspConfigs')
 
@@ -223,31 +219,12 @@ nnoremap <leader>pv :wincmd v<bar> :Ex <bar> :vertical resize 30<CR>
 nnoremap <leader>pw :lua require('telescope.builtin').grep_string { search = vim.fn.expand("<cword>") }<CR>
 vnoremap <leader>pw :lua require('telescope.builtin').grep_string { search = vim.fn.expand("<cword>") }<CR>
 nnoremap <leader>pb :lua require('telescope.builtin').buffers()<CR>
-nnoremap <leader>vh :lua require('telescope.builtin').help_tags()<CR>
+nnoremap <leader>ph :lua require('telescope.builtin').help_tags()<CR>
 nnoremap <leader>ps :lua require('telescope.builtin').grep_string({ search = vim.fn.input("Grep For > ")})<CR>
 nnoremap <C-p> :lua require('telescope.builtin').git_files()<CR>
 nnoremap <Leader>pf :lua require('telescope.builtin').find_files()<CR>
 nnoremap <Leader><CR> :so ~/.config/nvim/init.vim<CR>
 
-lua <<EOF
-require'nvim-treesitter.configs'.setup {
-  highlight = {
-    enable = true
-  },
-  indent = { 
-    enable = true 
-  },
-  incremental_selection = {
-    enable = true,
-    keymaps = {
-      init_selection = "gnn",
-      node_incremental = "grn",
-      scope_incremental = "grc",
-      node_decremental = "grm",
-    },
-  },
-}
-EOF
 
 nnoremap <leader>teu :1Ttoggle<CR>
 nnoremap <leader>tei :2Ttoggle<CR>
@@ -264,15 +241,42 @@ tnoremap <C-^> <C-\><C-n><C-^>
 tnoremap <C-q> <C-\><C-n><C-w><C-q>
 tnoremap <C-n> <C-\><C-n>
 tnoremap <C-u> <C-\><C-n><C-w><C-k>
-nnoremap <C-d> <C-w><C-j>a
+nnoremap <C-j> <C-w><C-j>a
 
 nnoremap <leader>hh :wincmd h<CR>
 nnoremap <leader>jj :wincmd j<CR>
 nnoremap <leader>kk :wincmd k<CR>
 nnoremap <leader>ll :wincmd l<CR>
 
-au BufEnter * set indentexpr=nvim_treesitter#indent()
 let g:neoterm_default_mod = 'botright'
 let g:neoterm_size = 10
 let g:neoterm_autoinsert = 1
 let g:neoterm_fixedsize = 1
+
+lua <<EOF
+require'nvim-treesitter.configs'.setup {
+  highlight = {
+    enable = true
+  },
+  indent = { 
+    enable = false
+  },
+  incremental_selection = {
+    enable = true,
+    keymaps = {
+      init_selection = "gnn",
+      node_incremental = "grn",
+      scope_incremental = "grc",
+      node_decremental = "grm",
+    },
+  },
+}
+EOF
+
+nmap <C-s> <Plug>BujoAddTodoNormal
+imap <C-s> <Plug>BujoAddTodoInsert
+nmap <C-s> <Plug>BujoChecknormal
+imap <C-s> <Plug>BujoCheckinsert
+
+let g:bujo#todo_file_path = $HOME . "/.cache/bujo"
+let g:bujo#window_width = 40
