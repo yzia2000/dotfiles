@@ -40,3 +40,4 @@ lspconfig.sumneko_lua.setup{
     },
 }
 lspconfig.dockerls.setup{}
+lspconfig.cssls.setup{}

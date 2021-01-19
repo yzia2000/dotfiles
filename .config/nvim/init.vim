@@ -1,7 +1,8 @@
 syntax on
-filetype plugin indent on
 
 set exrc
+set nopreviewwindow
+set laststatus=0
 set nohlsearch
 set nopaste
 set noerrorbells
@@ -10,8 +11,8 @@ set nobackup
 set noswapfile
 set undodir=~/.undodir
 set undofile
-set number rnu
-set ruler
+set noruler
+set noshowcmd
 set autoindent
 set smartindent
 set shiftwidth=4
@@ -20,7 +21,6 @@ set incsearch
 set expandtab
 set nowrap
 set colorcolumn=80
-set cmdheight=2
 set nofoldenable
 set updatetime=50
 set shortmess+=c
@@ -34,7 +34,21 @@ vnoremap . :normal .<CR>
 
 call plug#begin()
 
-Plug 'kassio/neoterm'
+Plug 'vim-test/vim-test'
+
+Plug 'nicwest/vim-http'
+
+" Tpope
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-projectionist'
+Plug 'tpope/vim-dispatch'
+Plug 'tpope/vim-dadbod'
+Plug 'tpope/vim-markdown'
+
+Plug 'voldikss/vim-floaterm'
 
 " Neovim lsp Plugins
 Plug 'neovim/nvim-lspconfig'
@@ -42,13 +56,14 @@ Plug 'nvim-lua/completion-nvim'
 Plug 'tjdevries/nlua.nvim'
 Plug 'tjdevries/lsp_extensions.nvim' 
 
+Plug 'norcalli/nvim-colorizer.lua'
+
+
 Plug 'ianding1/leetcode.vim'
 Plug 'vim-utils/vim-man'
-Plug 'tpope/vim-fugitive'
 Plug 'rafi/awesome-vim-colorschemes'
 Plug 'Yggdroot/indentLine'
 Plug 'mbbill/undotree'
-Plug 'mattn/emmet-vim'
 Plug 'puremourning/vimspector'
 Plug 'szw/vim-maximizer'
 Plug 'SirVer/ultisnips'
@@ -63,11 +78,11 @@ Plug 'nvim-lua/popup.nvim'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
 
+Plug 'dstein64/vim-startuptime'
+
 call plug#end()
 
 command Sw :w !sudo tee %
-
-
 
 let g:netrw_banner=0	    " disable annoying banner
 let g:netrw_browse_split=4  " open in prior window
@@ -79,12 +94,6 @@ let g:netrw_list_hide=netrw_gitignore#Hide()
 let g:netrw_list_hide.=',\(^\|\s\s\)\zs\.\S\+'
 
 " statusline
-set laststatus=2
-set statusline=%F%m%r%h%w\
-set statusline+=%{fugitive#statusline()}\
-set statusline+=[%{strlen(&fenc)?&fenc:&enc}]
-set statusline+=\ [line\ %l\/%L]
-set statusline=\ %f%m%r%h%w\ %=%({%{&ff}\|%{(&fenc==\"\"?&enc:&fenc).((exists(\"+bomb\")\ &&\ &bomb)?\",B\":\"\")}%k\|%Y}%)\ %([%l,%v][%p%%]\ %)
 
 " Pasting
 nnoremap <leader>y "+y
@@ -93,8 +102,9 @@ vnoremap <leader>p "_dP
 nnoremap <leader>Y gg"+yG
 
 " Color scheme
-colorscheme space-vim-dark
-set background=dark
+" colorscheme space-vim-dark
+colorscheme purify
+" set background=dark
 set termguicolors                    " Enable GUI colors for the terminal to get truecolor
 
 " txt files
@@ -102,13 +112,13 @@ autocmd BufRead,BufNewFile *.txt set wrap
 autocmd BufRead,BufNewFile *.txt set linebreak
 
 " c/cpp specific bindings
-autocmd FileType cpp nnoremap <buffer> <leader>r :w <CR> :te g++ % -o %<_out && ./%<_out
-autocmd FileType cpp nnoremap <buffer> <leader>t :w <CR> :te g++ % -o %<_out && ./%<_out < 
-autocmd FileType cpp nnoremap <buffer> <leader>ks :w <CR> :te python3 /home/yushi/Documents/kattis/submit.py %
-autocmd FileType cpp nnoremap <buffer> <leader>kt :w <CR> :te python3 /home/yushi/Documents/kattis/test.py %<
+autocmd FileType cpp nnoremap <buffer> <leader>r :w <CR> :FloatermNew g++ % -o %<_out && ./%<_out
+autocmd FileType cpp nnoremap <buffer> <leader>t :w <CR> :FloatermNew g++ % -o %<_out && ./%<_out < 
+autocmd FileType cpp nnoremap <buffer> <leader>ks :w <CR> :FloatermNew python3 /home/yushi/Documents/kattis/submit.py %
+autocmd FileType cpp nnoremap <buffer> <leader>kt :w <CR> :FloatermNew python3 /home/yushi/Documents/kattis/test.py %<
 autocmd FileType cpp nnoremap <leader>lt :LeetCodeTest<cr>
 autocmd FileType cpp nnoremap <leader>ls :LeetCodeSubmit<cr>
-autocmd FileType c nnoremap <buffer> <leader>r :w <CR> :te gcc -g % -o %< && ./%< < 
+autocmd FileType c nnoremap <buffer> <leader>r :w <CR> :FloatermNew gcc -g % -o %< && ./%< < 
 
 autocmd BufReadPre *.doc set ro
 autocmd BufReadPre *.doc set hlsearch!
@@ -120,7 +130,7 @@ autocmd FileType java nnoremap <buffer> <leader>c :w <CR> :!clear <CR> :compiler
 autocmd FileType java nnoremap <buffer> <leader>t :w <CR> :!clear <CR> :compiler gradlew <CR> :make test <CR>
 
 " Python specific bindings
-autocmd FileType python nnoremap <buffer> <leader>r :w <CR> :te python %
+autocmd FileType python nnoremap <buffer> <leader>r :w <CR> :FloatermNew python %
 
 autocmd BufRead,BufNewFile *.svb set ft=vbnet
 
@@ -226,32 +236,19 @@ nnoremap <Leader>pf :lua require('telescope.builtin').find_files()<CR>
 nnoremap <Leader><CR> :so ~/.config/nvim/init.vim<CR>
 
 
-nnoremap <leader>teu :1Ttoggle<CR>
-nnoremap <leader>tei :2Ttoggle<CR>
-nnoremap <leader>teo :3Ttoggle<CR>
-nnoremap <leader>tep :4Ttoggle<CR>
-nnoremap <leader>teca :TcloseAll<CR>
-nnoremap <Leader>rr :call neoterm#clear() \| call neoterm#exec(['!!', '', ''])<CR>
+nnoremap <leader>teu :FloatermToggle first<CR>
+nnoremap <leader>tei :FloatermToggle second<CR>
+nnoremap <leader>teo :FloatermToggle third<CR>
+nnoremap <leader>tep :FloatermToggle fourth<CR>
+nnoremap <leader>teh :FloatermToggle <CR>
 
-noremap <C-q> :TcloseAll<CR>
-
-nnoremap <leader>ter :Tnew <CR>
-
-tnoremap <C-^> <C-\><C-n><C-^>
-tnoremap <C-q> <C-\><C-n><C-w><C-q>
-tnoremap <C-n> <C-\><C-n>
-tnoremap <C-u> <C-\><C-n><C-w><C-k>
-nnoremap <C-j> <C-w><C-j>a
+nnoremap <A-h> <cmd>FloatermToggle<CR>
+tnoremap <A-h> <cmd>FloatermToggle<CR>
 
 nnoremap <leader>hh :wincmd h<CR>
 nnoremap <leader>jj :wincmd j<CR>
 nnoremap <leader>kk :wincmd k<CR>
 nnoremap <leader>ll :wincmd l<CR>
-
-let g:neoterm_default_mod = 'botright'
-let g:neoterm_size = 10
-let g:neoterm_autoinsert = 1
-let g:neoterm_fixedsize = 1
 
 lua <<EOF
 require'nvim-treesitter.configs'.setup {
@@ -259,7 +256,7 @@ require'nvim-treesitter.configs'.setup {
     enable = true
   },
   indent = { 
-    enable = false
+    enable = true
   },
   incremental_selection = {
     enable = true,
@@ -280,3 +277,16 @@ imap <C-s> <Plug>BujoCheckinsert
 
 let g:bujo#todo_file_path = $HOME . "/.cache/bujo"
 let g:bujo#window_width = 40
+
+nmap <leader>ttn :TestNearest<CR>
+nmap <leader>ttf :TestFile<CR>
+nmap <leader>tts :TestSuite<CR>
+nmap <leader>ttl :TestLast<CR>
+nmap <leader>ttg :TestVisit<CR>
+
+let test#strategy = "floaterm"
+let g:prettier#exec_cmd_path = "/usr/bin/prettier"
+nmap <Leader>py <Plug>(Prettier)
+
+nmap <leader>rnu :set number rnu<CR>
+nmap <leader>run :set nonumber norelativenumber<CR>
