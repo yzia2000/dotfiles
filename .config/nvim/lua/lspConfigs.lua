@@ -18,7 +18,20 @@ lspconfig.pyls.setup{}
 lspconfig.tsserver.setup{}
 lspconfig.gopls.setup{}
 lspconfig.vimls.setup{}
-lspconfig.texlab.setup{}
+lspconfig.texlab.setup{
+    settings = {
+        latex = {
+            build = {
+                args = { "-pdf", "-pvc", "-interaction=nonstopmode", "-synctex=1", "%f" },
+            },
+            forwardSearch = {
+                args = { "--synctex-forward", "%l:1:%f", "%p" },
+                executable = "zathura",
+                onSave = false
+            }
+        }
+    }
+}
 lspconfig.sumneko_lua.setup{
     cmd = {sumneko_binary, "-E", sumneko_root_path .. "/main.lua"};
     settings = {

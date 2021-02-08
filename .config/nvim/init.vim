@@ -15,8 +15,8 @@ set noruler
 set noshowcmd
 set autoindent
 set smartindent
-set shiftwidth=4
-set tabstop=4 softtabstop=4
+set shiftwidth=2
+set tabstop=2 softtabstop=2
 set incsearch
 set expandtab
 set nowrap
@@ -37,6 +37,11 @@ call plug#begin()
 Plug 'vim-test/vim-test'
 
 Plug 'nicwest/vim-http'
+
+" post install (yarn install | npm install) then load plugin only for editing supported files
+Plug 'prettier/vim-prettier', {
+  \ 'do': 'npm install',
+  \ 'for': ['typescriptreact', 'javascript', 'typescript', 'css', 'less', 'scss', 'json', 'graphql', 'markdown', 'vue', 'yaml', 'html'] }
 
 " Tpope
 Plug 'tpope/vim-commentary'
@@ -71,16 +76,17 @@ Plug 'vuciv/vim-bujo'
 Plug 'honza/vim-snippets'
 Plug 'airblade/vim-gitgutter'
 
-Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend updating the parsers on update
-Plug 'nvim-treesitter/playground'
-
 Plug 'nvim-lua/popup.nvim'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
 
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend updating the parsers on update
+Plug 'nvim-treesitter/playground'
+
 Plug 'dstein64/vim-startuptime'
 
 call plug#end()
+
 
 command Sw :w !sudo tee %
 
@@ -99,6 +105,7 @@ let g:netrw_list_hide.=',\(^\|\s\s\)\zs\.\S\+'
 nnoremap <leader>y "+y
 vnoremap <leader>y "+y
 vnoremap <leader>p "_dP
+nnoremap <leader>pc "+p
 nnoremap <leader>Y gg"+yG
 
 " Color scheme
@@ -181,7 +188,6 @@ let g:tex_flavor="latex"
 let g:vimtex_parser_bib_backend="biber"
 
 let g:leetcode_browser = 'firefox'
-
 let g:tex_conceal = ''
 
 let g:completion_enable_snippet = 'UltiSnips'
@@ -236,13 +242,18 @@ nnoremap <Leader>pf :lua require('telescope.builtin').find_files()<CR>
 nnoremap <Leader><CR> :so ~/.config/nvim/init.vim<CR>
 
 
-nnoremap <leader>teu :FloatermToggle first<CR>
-nnoremap <leader>tei :FloatermToggle second<CR>
-nnoremap <leader>teo :FloatermToggle third<CR>
-nnoremap <leader>tep :FloatermToggle fourth<CR>
-nnoremap <leader>teh :FloatermToggle <CR>
+nnoremap <A-1> :FloatermToggle first<CR>
+nnoremap <A-2> :FloatermToggle second<CR>
+nnoremap <A-3> :FloatermToggle third<CR>
+nnoremap <A-4> :FloatermToggle fourth<CR>
+nnoremap <A-5> :FloatermToggle five<CR>
 
-nnoremap <A-h> <cmd>FloatermToggle<CR>
+tnoremap <A-1> <cmd>FloatermToggle first<CR>
+tnoremap <A-2> <cmd>FloatermToggle second<CR>
+tnoremap <A-3> <cmd>FloatermToggle third<CR>
+tnoremap <A-4> <cmd>FloatermToggle fourth<CR>
+tnoremap <A-5> <cmd>FloatermToggle five<CR>
+
 tnoremap <A-h> <cmd>FloatermToggle<CR>
 
 nnoremap <leader>hh :wincmd h<CR>
@@ -285,8 +296,9 @@ nmap <leader>ttl :TestLast<CR>
 nmap <leader>ttg :TestVisit<CR>
 
 let test#strategy = "floaterm"
-let g:prettier#exec_cmd_path = "/usr/bin/prettier"
 nmap <Leader>py <Plug>(Prettier)
 
 nmap <leader>rnu :set number rnu<CR>
 nmap <leader>run :set nonumber norelativenumber<CR>
+
+let g:vim_http_tempbuffer = 1

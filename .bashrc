@@ -146,4 +146,3 @@ alias bconf='vim ~/.bashrc'
 alias conf='cd ~/.config'
 source /usr/share/fzf/key-bindings.bash
 source /usr/share/fzf/completion.bash
-source "$HOME/.cargo/env"
