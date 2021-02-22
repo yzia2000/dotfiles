@@ -52,6 +52,7 @@ Plug 'tpope/vim-projectionist'
 Plug 'tpope/vim-dispatch'
 Plug 'tpope/vim-dadbod'
 Plug 'tpope/vim-markdown'
+Plug 'tpope/vim-eunuch'
 
 Plug 'voldikss/vim-floaterm'
 
@@ -105,7 +106,8 @@ let g:netrw_list_hide.=',\(^\|\s\s\)\zs\.\S\+'
 nnoremap <leader>y "+y
 vnoremap <leader>y "+y
 vnoremap <leader>p "_dP
-nnoremap <leader>pc "+p
+nnoremap <leader>pc "+P
+vnoremap <leader>pc "+P
 nnoremap <leader>Y gg"+yG
 
 " Color scheme
@@ -225,6 +227,7 @@ nmap <leader>dl <Plug>VimspectorStepInto
 nmap <leader>dj <Plug>VimspectorStepOver
 nmap <leader>dk <Plug>VimspectorStepOut
 nmap <leader>d_ <Plug>VimspectorRestart
+nmap <leader>dst <Plug>VimspectorReset
 nnoremap <leader>d<space> :call vimspector#Continue()<CR>
 nmap <leader>drc <Plug>VimspectorRunToCursor
 nmap <leader>dbp <Plug>VimspectorToggleBreakpoint
@@ -295,6 +298,8 @@ nmap <leader>tts :TestSuite<CR>
 nmap <leader>ttl :TestLast<CR>
 nmap <leader>ttg :TestVisit<CR>
 
+nmap <leader>ind :IndentLinesToggle<CR>
+
 let test#strategy = "floaterm"
 nmap <Leader>py <Plug>(Prettier)
 
@@ -302,3 +307,7 @@ nmap <leader>rnu :set number rnu<CR>
 nmap <leader>run :set nonumber norelativenumber<CR>
 
 let g:vim_http_tempbuffer = 1
+let g:floaterm_width=0.9
+let g:indentLine_enabled=0
+
+nnoremap <leader>mx :MaximizerToggle<CR>
