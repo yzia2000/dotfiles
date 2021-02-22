@@ -1,0 +1,26 @@
+snippet nodespector "vimspector config for node"
+{
+	"configurations": {
+		"run": {
+			"adapter": "vscode-node",
+				"configuration": {
+					"request": "attach",
+					"protocol": "auto",
+					"stopOnEntry": true,
+					"restart": true,
+					"port": 9229,
+					"cwd": "${workspaceRoot}",
+					"remoteRoot": "/app/dist",
+					"localRoot": "${workspaceRoot}/dist",
+					"outFiles": [
+						"${workspaceFolder}/dist/**/*.js"
+					],
+					"skipFiles": [
+						"<node_internals>/**/*.js"
+					],
+					"internalConsoleOptions": "neverOpen"
+				}
+		}
+	}
+}
+endsnippet
