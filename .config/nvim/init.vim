@@ -37,6 +37,7 @@ call plug#begin()
 Plug 'vim-test/vim-test'
 
 Plug 'nicwest/vim-http'
+Plug 'gyim/vim-boxdraw'
 
 " post install (yarn install | npm install) then load plugin only for editing supported files
 Plug 'prettier/vim-prettier', {
@@ -112,9 +113,9 @@ nnoremap <leader>Y gg"+yG
 
 " Color scheme
 " colorscheme space-vim-dark
-colorscheme purify
-" set background=dark
 set termguicolors                    " Enable GUI colors for the terminal to get truecolor
+colo challenger_deep
+" set background=dark
 
 " txt files
 autocmd BufRead,BufNewFile *.txt set wrap 
@@ -259,11 +260,6 @@ tnoremap <A-5> <cmd>FloatermToggle five<CR>
 
 tnoremap <A-h> <cmd>FloatermToggle<CR>
 
-nnoremap <leader>hh :wincmd h<CR>
-nnoremap <leader>jj :wincmd j<CR>
-nnoremap <leader>kk :wincmd k<CR>
-nnoremap <leader>ll :wincmd l<CR>
-
 lua <<EOF
 require'nvim-treesitter.configs'.setup {
   highlight = {
@@ -284,8 +280,8 @@ require'nvim-treesitter.configs'.setup {
 }
 EOF
 
-nmap <C-s> <Plug>BujoAddTodoNormal
-imap <C-s> <Plug>BujoAddTodoInsert
+nmap <C-q> <Plug>BujoAddnormal
+imap <C-q> <Plug>BujoAddinsert
 nmap <C-s> <Plug>BujoChecknormal
 imap <C-s> <Plug>BujoCheckinsert
 
@@ -311,3 +307,4 @@ let g:floaterm_width=0.9
 let g:indentLine_enabled=0
 
 nnoremap <leader>mx :MaximizerToggle<CR>
+let g:netrw_http_cmd = "w3m"
