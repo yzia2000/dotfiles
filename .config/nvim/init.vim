@@ -25,7 +25,7 @@ set nofoldenable
 set updatetime=50
 set shortmess+=c
 set noshowmode
-set completeopt=menuone,noinsert,noselect
+set completeopt=menu,menuone,noselect
 set signcolumn=yes
 
 let mapleader = " "
@@ -33,7 +33,8 @@ let mapleader = " "
 source $HOME/.config/nvim/plugins.vim
 
 set termguicolors
-colo challenger_deep
+let g:gruvbox_italic=1
+colo ayu
 
 source $HOME/.config/nvim/au.vim
 source $HOME/.config/nvim/var.vim

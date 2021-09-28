@@ -5,10 +5,11 @@ export PATH="$HOME/.npm/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
 export PATH="$HOME/go/bin:$PATH"
 export PATH="$HOME/.cargo/bin:$PATH"
+export LAST_DIR="$HOME"
 export GEM_HOME="$(ruby -e 'puts Gem.user_dir')"
 export PATH="$PATH:$GEM_HOME/bin"
-export EDITOR=/usr/bin/nvim
+export EDITOR=/usr/local/bin/nvim
 
 if [[ "$(tty)" = "/dev/tty1" ]]; then
-    pgrep dwm || startx
+  pgrep dwm || startx
 fi

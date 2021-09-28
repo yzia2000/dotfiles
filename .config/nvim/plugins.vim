@@ -19,20 +19,17 @@ Plug 'voldikss/vim-floaterm'
 
 " Neovim lsp Plugins
 Plug 'neovim/nvim-lspconfig'
-Plug 'nvim-lua/completion-nvim'
+" Plug 'nvim-lua/completion-nvim'
 Plug 'tjdevries/nlua.nvim'
 Plug 'tjdevries/lsp_extensions.nvim' 
 
 Plug 'norcalli/nvim-colorizer.lua'
-
 
 Plug 'ianding1/leetcode.vim'
 Plug 'vim-utils/vim-man'
 Plug 'rafi/awesome-vim-colorschemes'
 Plug 'Yggdroot/indentLine'
 Plug 'mbbill/undotree'
-Plug 'puremourning/vimspector'
-Plug 'szw/vim-maximizer'
 Plug 'SirVer/ultisnips'
 Plug 'vuciv/vim-bujo'
 Plug 'honza/vim-snippets'
@@ -50,5 +47,34 @@ Plug 'nvim-treesitter/playground'
 Plug 'dstein64/vim-startuptime'
 
 Plug 'mfussenegger/nvim-dap'
+
+Plug 'puremourning/vimspector'
+
+" Plug 'justinmk/vim-dirvish'
+Plug 'bounceme/remote-viewer'
+
+Plug 'tami5/sql.nvim'
+Plug '~/.config/nvim/nvim_plugins/ntty'
+Plug 'prettier/vim-prettier'
+
+Plug 'kyazdani42/nvim-web-devicons'
+
+Plug 'mfussenegger/nvim-jdtls'
+
+" Plug 'hrsh7th/nvim-compe'
+Plug 'hrsh7th/nvim-cmp'
+
+Plug 'hrsh7th/cmp-nvim-lsp'
+
+Plug 'hrsh7th/cmp-path'
+
+
+Plug 'jose-elias-alvarez/null-ls.nvim'
+
+Plug 'jose-elias-alvarez/nvim-lsp-ts-utils'
+
+" Plug 'mfussenegger/nvim-lint' 
+
+" Plug 'vim-syntastic/syntastic'
 
 call plug#end()

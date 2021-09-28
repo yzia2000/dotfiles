@@ -26,4 +26,14 @@ autocmd Filetype tex autocmd BufUnload <buffer> VimtexClean
 
 autocmd Filetype go nnoremap <buffer> <leader>r :w <CR> :!clear <CR> :!go run % <CR>
 
-au BufEnter * lua require'completion'.on_attach()
+" au BufEnter * lua require'completion'.on_attach()
+
+au FileType dap-repl lua require('dap.ext.autocompl').attach()
+
+autocmd BufEnter,BufWinEnter,TabEnter *.rs :lua require'lsp_extensions'.inlay_hints{}
+
+augroup fmt
+  autocmd!
+  autocmd BufWritePre *.java silent! undojoin | silent! lua require'jdtls'.organize_imports() 
+  autocmd BufWritePre * silent! undojoin | silent! lua vim.lsp.buf.formatting()
+augroup END
