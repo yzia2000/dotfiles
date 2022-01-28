@@ -63,33 +63,29 @@ dap.defaults.fallback.external_terminal = {
   args = {'-e'};
 }
 
-dap.adapters.c = {
+dap.adapters.lldb = {
   type = 'executable',
-  attach = {
-    pidProperty = "pid",
-    pidSelect = "ask"
-  },
-  command = 'lldb-vscode',
-  env = {
-    LLDB_LAUNCH_FLAG_LAUNCH_IN_TTY = "YES"
-  },
+  command = '/usr/bin/lldb-vscode', -- adjust as needed
   name = "lldb"
 }
 
 dap.configurations.c = {
   {
-    name = "C",
+    name = "Launch",
     console = "externalConsole",
-    type = "c",
+    type = "lldb",
     request = "launch",
     stopOnEntry = true,
     terminal = "external",
     restart = true,
-    sourceLanguages = {"c"},
-    program = "${workspaceFolder}/server",
+    program = "${workspaceFolder}/coherence",
+    args = {"MESI", "test", "1024", "1", "16"},
     cwd = "${workspaceFolder}",
+    runInTerminal = false,
   }
 }
+
+dap.configurations.cpp = dap.configurations.c;
 
 dap.defaults.fallback.external_terminal = {
   command = '/usr/local/bin/st';

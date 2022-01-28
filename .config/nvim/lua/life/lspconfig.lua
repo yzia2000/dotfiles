@@ -22,6 +22,11 @@ local cmp = require'cmp'
 local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
 
 cmp.setup({
+  snippet = {
+    expand = function(args)
+      vim.fn["UltiSnips#Anon"](args.body)
+    end,
+  },
   mapping = {
     ['<C-d>'] = cmp.mapping.scroll_docs(-4),
     ['<C-f>'] = cmp.mapping.scroll_docs(4),
@@ -67,8 +72,14 @@ lspconfig.pylsp.setup{
 }
 
 local null_ls = require'null-ls'
-null_ls.config{}
-require("lspconfig")["null-ls"].setup {}
+null_ls.setup({
+  sources = {
+    null_ls.builtins.diagnostics.eslint_d, -- eslint or eslint_d
+    null_ls.builtins.code_actions.eslint_d, -- eslint or eslint_d
+    null_ls.builtins.formatting.eslint_d -- prettier, eslint, eslint_d, or prettierd
+  },
+})
+
 lspconfig.tsserver.setup {
   capabilities = capabilities,
   on_attach = function(client, bufnr)
@@ -82,39 +93,32 @@ lspconfig.tsserver.setup {
     ts_utils.setup {
       debug = false,
       disable_commands = false,
-      enable_import_on_completion = true,
+      enable_import_on_completion = false,
 
       -- import all
       import_all_timeout = 5000, -- ms
+      -- lower numbers = higher priority
       import_all_priorities = {
-        buffers = 4, -- loaded buffer names
-        buffer_content = 3, -- loaded buffer content
-        local_files = 2, -- git files or files with relative path markers
         same_file = 1, -- add to existing import statement
+        local_files = 2, -- git files or files with relative path markers
+        buffer_content = 3, -- loaded buffer content
+        buffers = 4, -- loaded buffer names
       },
       import_all_scan_buffers = 100,
       import_all_select_source = false,
 
-      -- eslint
-      eslint_enable_code_actions = true,
-      eslint_enable_disable_comments = true,
-      eslint_bin = "eslint_d",
-      eslint_enable_diagnostics = true,
-      eslint_opts = {},
-
-      -- formatting
-      enable_formatting = true,
-      formatter = "eslint_d",
-      formatter_opts = {},
-
-      -- update imports on file move
-      update_imports_on_move = true,
-      require_confirmation_on_move = false,
-      watch_dir = nil,
-
       -- filter diagnostics
       filter_out_diagnostics_by_severity = {},
       filter_out_diagnostics_by_code = {},
+
+      -- inlay hints
+      auto_inlay_hints = true,
+      inlay_hints_highlight = "Comment",
+
+      -- update imports on file move
+      update_imports_on_move = false,
+      require_confirmation_on_move = false,
+      watch_dir = nil,
     }
 
     -- required to fix code action ranges and filter diagnostics
@@ -155,6 +159,7 @@ lspconfig.dockerls.setup{
 lspconfig.cssls.setup{
   capabilities = capabilities,
 }
+
 lspconfig.rust_analyzer.setup{
   capabilities = capabilities,
 }
@@ -162,9 +167,7 @@ lspconfig.sqlls.setup{
   capabilities = capabilities,
   cmd = {"sql-language-server", "up", "--method", "stdio"}
 }
--- lspconfig.jdtls.setup{
-  --     cmd = { "jdtls", '-data', '/home/yushi/.jdtls-workspace'},
-  -- }
 lspconfig.r_language_server.setup{
   capabilities = capabilities,
 }
+lspconfig.hls.setup{}

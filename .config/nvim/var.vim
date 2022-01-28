@@ -42,14 +42,6 @@ let g:netrw_liststyle=3     " tree view
 let g:netrw_list_hide=netrw_gitignore#Hide()
 let g:netrw_list_hide.=',\(^\|\s\s\)\zs\.\S\+'
 
-if has('nvim-0.5')
-  augroup lsp
-    au!
-    " au FileType java lua require('jdtls').start_or_attach({cmd = {'jdtls', '-data', '/home/yushi/workspace', '--add-modules=ALL-SYSTEM', '--add-opens java.base/java.util=ALL-UNNAMED', '--add-opens java.base/java.lang=ALL-UNNAMED', '-Dlog.protocol=true', '-Dlog.level=ALL'}})
-    au FileType java lua require('jdtls').start_or_attach({cmd = {'jdtls', '-data', '/home/yushi/.jdtls-workspace'}})
-  augroup end
-endif
-
 command! -buffer JdtCompile lua require('jdtls').compile()
 command! -buffer JdtUpdateConfig lua require('jdtls').update_project_config()
 command! -buffer JdtJol lua require('jdtls').jol()

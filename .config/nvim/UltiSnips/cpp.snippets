@@ -1,5 +1,6 @@
 snippet comp "Snippet for competitive programming cpp setup"
 #include <bits/stdc++.h>
+#include <cstring>
 
 using namespace std;
 
@@ -12,11 +13,116 @@ using namespace std;
 #define all(c) (c).begin(), (c).end()
 #define sz(x) (int)(x).size()
 
-int main() {
-	ios::sync_with_stdio(0);
-	cin.tie(NULL);
+vector<string> split(string s, string delimiter) {
+  size_t pos_start = 0, pos_end, delim_len = delimiter.length();
+  string token;
+  vector<string> res;
 
+  while ((pos_end = s.find(delimiter, pos_start)) != string::npos) {
+    token = s.substr(pos_start, pos_end - pos_start);
+    pos_start = pos_end + delim_len;
+    res.push_back(token);
+  }
+
+  res.push_back(s.substr(pos_start));
+  return res;
+}
+
+struct BinaryTree {
+  int val;
+  BinaryTree *left;
+  BinaryTree *right;
+  BinaryTree(int num) : val(num), left(nullptr), right(nullptr) {}
+  BinaryTree(vector<int> nums) : val(nums[0]) {
+    if (nums.empty()) {
+      return;
+    }
+    for (int i = 1; i < nums.size(); i++) {
+      this->insert(nums[i]);
+    }
+  }
+  void insert(int val) {
+    if (val < this->val) {
+      if (left == nullptr) {
+        left = new BinaryTree(val);
+      } else {
+        left->insert(val);
+      }
+    } else {
+      if (right == nullptr) {
+        right = new BinaryTree(val);
+      } else {
+        right->insert(val);
+      }
+    }
+  }
+  void inorder_print() {
+    if (left != nullptr) {
+      left->inorder_print();
+    }
+    std::cout << val << std::endl;
+    if (right != nullptr) {
+      right->inorder_print();
+    }
+  }
+  void preorder_print() {
+    std::cout << val << std::endl;
+    if (left != nullptr) {
+      left->preorder_print();
+    }
+    if (right != nullptr) {
+      right->preorder_print();
+    }
+  }
+  void post_order() {
+    if (left != nullptr) {
+      left->preorder_print();
+    }
+    if (right != nullptr) {
+      right->preorder_print();
+    }
+    std::cout << val << std::endl;
+  }
+};
+
+struct ListNode {
+  int val;
+  ListNode *next;
+  ListNode(int num) : val(num), next(nullptr) {}
+  ListNode(vector<int> nums) : val(nums[0]) {
+    if (nums.empty()) {
+      return;
+    }
+    val = nums[0];
+    auto curr = this;
+    for (int i = 1; i < nums.size(); i++) {
+      curr->next = new ListNode(nums[i]);
+      curr = curr->next;
+    }
+  }
+  void print() {
+    for (auto curr = this; curr != nullptr; curr = curr->next) {
+      std::cout << curr->val << std::endl;
+    }
+  }
+};
+
+void solve(vector<int> nums) {
 	$0
-	return 0;
+}
+
+int main() {
+  int n;
+  std::cin >> n;
+  std::vector<int> nums;
+  while (n--) {
+    int num;
+    std::cin >> num;
+    nums.push_back(num);
+  }
+
+  solve(nums);
+
+  return 0;
 }
 endsnippet

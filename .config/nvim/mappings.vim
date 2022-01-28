@@ -61,15 +61,15 @@ nnoremap <leader>vrr <cmd>lua vim.lsp.buf.references()<CR>
 nnoremap <leader>vrn <cmd>lua vim.lsp.buf.rename()<CR>
 nnoremap <leader>vh <cmd>lua vim.lsp.buf.hover()<CR>
 nnoremap <leader>vca <cmd>lua vim.lsp.buf.code_action()<CR>
-nnoremap <leader>vsd <cmd>lua vim.lsp.diagnostic.show_line_diagnostics(); vim.lsp.diagnostic.show_line_diagnostics()<CR>
-nnoremap <leader>vdd <cmd>Telescope lsp_document_diagnostics<CR>
-nnoremap <leader>vwd <cmd>Telescope lsp_workspace_diagnostics<CR>
+nnoremap <leader>vsd <cmd>lua vim.diagnostic.open_float(); vim.diagnostic.open_float()<CR>
+nnoremap <leader>vdd <cmd>Telescope diagnostics<CR>
+nnoremap <leader>vwd <cmd>Telescope diagnostics<CR>
 nnoremap <leader>vfm <cmd>lua vim.lsp.buf.formatting()<CR>
 nnoremap <leader>vss <cmd>lua require('telescope.builtin').lsp_document_symbols()<CR>
 nnoremap <leader>vsw <cmd>lua require('telescope.builtin').lsp_workspace_symbols()<CR>
 
 nnoremap <leader>dd :call vimspector#Launch()<CR>
-nnoremap <leader>dtcb :call vimspector#ClearBreakpoints()<CR>
+nnoremap <leader>dcl :call vimspector#ClearBreakpoints()<CR>
 nmap <leader>dl <Plug>VimspectorStepInto
 nmap <leader>dj <Plug>VimspectorStepOver
 nmap <leader>dk <Plug>VimspectorStepOut
@@ -96,8 +96,7 @@ nnoremap <Leader><CR> :so ~/.config/nvim/init.vim<CR>
 
 nnoremap <leader>y "+y
 vnoremap <leader>y "+y
-vnoremap <leader>p "_dP
-nnoremap <leader>pc "+P
+vnoremap <leader>pd "_dP
 vnoremap <leader>pc "+P
 
 nnoremap <leader>Y gg"+yG

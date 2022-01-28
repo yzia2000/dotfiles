@@ -9,11 +9,11 @@ SAVEHIST=10000
 HISTFILE=~/.cache/zsh/history
 
 # Basic auto/tab complete:
-autoload -U compinit
+fpath=(~/.zsh/completion $fpath)
 zstyle ':completion:*' menu select
 zmodload zsh/complist
-compinit
 _comp_options+=(globdots) # Include hidden files.
+autoload -Uz compinit && compinit -i
 
 # vi mode
 bindkey -v
@@ -91,18 +91,18 @@ xhost +local:root >/dev/null 2>&1
 ex() {
   if [ -f $1 ]; then
     case $1 in
-      *.tar.bz2) tar xjf $1 ;;
-      *.tar.gz) tar xzf $1 ;;
-      *.bz2) bunzip2 $1 ;;
-      *.rar) unrar x $1 ;;
-      *.gz) gunzip $1 ;;
-      *.tar) tar xf $1 ;;
-      *.tbz2) tar xjf $1 ;;
-      *.tgz) tar xzf $1 ;;
-      *.zip) unzip $1 ;;
-      *.Z) uncompress $1 ;;
-      *.7z) 7z x $1 ;;
-      *) echo "'$1' cannot be extracted via ex()" ;;
+    *.tar.bz2) tar xjf $1 ;;
+    *.tar.gz) tar xzf $1 ;;
+    *.bz2) bunzip2 $1 ;;
+    *.rar) unrar x $1 ;;
+    *.gz) gunzip $1 ;;
+    *.tar) tar xf $1 ;;
+    *.tbz2) tar xjf $1 ;;
+    *.tgz) tar xzf $1 ;;
+    *.zip) unzip $1 ;;
+    *.Z) uncompress $1 ;;
+    *.7z) 7z x $1 ;;
+    *) echo "'$1' cannot be extracted via ex()" ;;
     esac
   else
     echo "'$1' is not a valid file"
@@ -127,3 +127,7 @@ source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zs
 # ZSH_AUTOSUGGEST_STRATEGY=(match_prev_cmd completion)
 source /usr/share/nvm/init-nvm.sh
 source ~/.k3d/k3d-completion.zsh
+
+awsnotify() {
+    aws sns publish --topic-arn arn:aws:sns:ap-southeast-1:463097323178:awsnotify --message "$1"
+}

@@ -34,6 +34,11 @@ autocmd BufEnter,BufWinEnter,TabEnter *.rs :lua require'lsp_extensions'.inlay_hi
 
 augroup fmt
   autocmd!
-  autocmd BufWritePre *.java silent! undojoin | silent! lua require'jdtls'.organize_imports() 
   autocmd BufWritePre * silent! undojoin | silent! lua vim.lsp.buf.formatting()
 augroup END
+
+augroup lsp
+  au!
+  au FileType scala,sbt lua require("metals").initialize_or_attach({})
+  au FileType java lua require('jdtls').start_or_attach({cmd = {'jdtls', '-data', '/home/yushi/.jdtlsworkspace'}})
+augroup end

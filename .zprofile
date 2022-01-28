@@ -8,8 +8,16 @@ export PATH="$HOME/.cargo/bin:$PATH"
 export LAST_DIR="$HOME"
 export GEM_HOME="$(ruby -e 'puts Gem.user_dir')"
 export PATH="$PATH:$GEM_HOME/bin"
+export PATH="$PATH:/home/yushi/.local/share/coursier/bin"
+export PATH="/opt/clang-format-static:$PATH"
 export EDITOR=/usr/local/bin/nvim
+export PATH=$HOME/.ghcup/bin:$PATH
+export PATH=$HOME/.cabal/bin:$PATH
 
 if [[ "$(tty)" = "/dev/tty1" ]]; then
   pgrep dwm || startx
 fi
+
+awsnotify() {
+  aws sns publish --topic-arn arn:aws:sns:ap-southeast-1:663639379546:awsnotify --message "$1"
+}

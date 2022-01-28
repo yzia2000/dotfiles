@@ -20,7 +20,7 @@ set tabstop=2 softtabstop=2
 set incsearch
 set expandtab
 set nowrap
-set colorcolumn=80
+set colorcolumn=110
 set nofoldenable
 set updatetime=50
 set shortmess+=c
@@ -31,6 +31,8 @@ set signcolumn=yes
 let mapleader = " "
 
 source $HOME/.config/nvim/plugins.vim
+
+let g:did_load_filetypes = 1
 
 set termguicolors
 let g:gruvbox_italic=1
