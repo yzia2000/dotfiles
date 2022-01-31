@@ -79,7 +79,7 @@ alias ls='ls --color=auto'
 alias grep='grep --colour=auto'
 alias egrep='egrep --colour=auto'
 alias fgrep='fgrep --colour=auto'
-alias vim='nvr -s'
+# alias vim='nvr -s'
 alias zz='zathura --reparent=$XEMBED'
 alias mpvv='mpv --wid=$XEMBED'
 
@@ -126,7 +126,7 @@ source /usr/share/fzf/completion.zsh
 source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh 2>/dev/null
 # ZSH_AUTOSUGGEST_STRATEGY=(match_prev_cmd completion)
 source /usr/share/nvm/init-nvm.sh
-source ~/.k3d/k3d-completion.zsh
+# source ~/.k3d/k3d-completion.zsh
 
 awsnotify() {
     aws sns publish --topic-arn arn:aws:sns:ap-southeast-1:463097323178:awsnotify --message "$1"

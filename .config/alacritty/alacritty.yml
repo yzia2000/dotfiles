@@ -6,6 +6,8 @@ window:
     columns: 100
     lines: 85
 
+  opacity: 0.8
+
   padding:
     x: 0
     y: 0
@@ -25,8 +27,8 @@ scrolling:
 
 font:
   normal:
-    family: JetBrains Mono
-    size: 10.0
+    family: FiraCode Nerd Font
+    size: 7.0
   
 
 draw_bold_text_with_bright_colors: true
@@ -58,8 +60,6 @@ bell:
   animation: EaseOutExpo
   color: '0xffffff'
   duration: 0
-
-background_opacity: 0.8
 
 key_bindings:
   - { key: V,        mods: Control|Shift, action: Paste                        }
@@ -148,7 +148,7 @@ debug:
 
   persistent_logging: false
 
-  log_level: None
+  log_level: WARN
 
   print_events: false
 
