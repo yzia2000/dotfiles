@@ -1,15 +1,6 @@
 # Linux Dotfiles
 
 ## Submodules
-### Suckless
-1. dwm
-2. dsblocks
-3. st
-4. slock
-5. dmenu
-6. slstatus
-7. sxiv
-
 ## Configs
 1. dunst
 2. neovim
