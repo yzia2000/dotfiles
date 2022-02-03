@@ -41,4 +41,5 @@ picom &
 dsblocks &
 nm-applet &
 cbatticon &
+picom --experimental-backends &
 exec startdwm

@@ -73,7 +73,7 @@ Plug 'jose-elias-alvarez/null-ls.nvim'
 
 Plug 'jose-elias-alvarez/nvim-lsp-ts-utils'
 
-Plug 'nathom/filetype.nvim'
+" Plug 'nathom/filetype.nvim'
 
 Plug 'scalameta/nvim-metals'
 
