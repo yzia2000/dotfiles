@@ -79,7 +79,7 @@ alias ls='ls --color=auto'
 alias grep='grep --colour=auto'
 alias egrep='egrep --colour=auto'
 alias fgrep='fgrep --colour=auto'
-# alias vim='nvr -s'
+alias vim='nvr -s'
 alias zz='zathura --reparent=$XEMBED'
 alias mpvv='mpv --wid=$XEMBED'
 
