@@ -1,3 +1,6 @@
+require('config.lazy')
+require('lazy').setup('plugins')
+
 vim.cmd([[ syntax on ]])
 
 vim.cmd([[ set exrc ]])
@@ -43,14 +46,13 @@ vim.cmd([[ set termguicolors ]])
 
 -- vim.cmd([[ let g:gruvbox_italic=1 ]])
 -- vim.cmd([[ colo duskfox ]])
-vim.cmd([[ colo tokyonight-night ]])
+vim.cmd([[ colo rose-pine-moon ]])
 
 vim.cmd([[ source $HOME/.config/nvim/au.vim ]])
 vim.cmd([[ source $HOME/.config/nvim/var.vim ]])
 vim.cmd([[ source $HOME/.config/nvim/mappings.vim ]])
 
 require('impatient')
-require 'plugins'
 
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1

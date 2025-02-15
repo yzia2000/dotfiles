@@ -1,148 +1,122 @@
-vim.cmd [[packadd packer.nvim]]
-
-return require('packer').startup(function(use)
+return {
   -- Packer can manage itself
-  use 'wbthomason/packer.nvim'
+  'wbthomason/packer.nvim',
 
-  use 'gyim/vim-boxdraw'
+  'gyim/vim-boxdraw',
 
-  use 'sbdchd/neoformat'
+  'sbdchd/neoformat',
 
   -- use 'tpope/vim-commentary'
-  use {
-    'numToStr/Comment.nvim',
-    config = function()
-      require('Comment').setup()
-    end
-  }
-  use 'tpope/vim-fugitive'
-  use 'tpope/vim-surround'
-  use 'tpope/vim-repeat'
-  use 'tpope/vim-dispatch'
-  use 'tpope/vim-dadbod'
-  use 'tpope/vim-markdown'
-  use 'tpope/vim-eunuch'
-  use 'lambdalisue/suda.vim'
+  {
+    'numToStr/Comment.nvim', opts = {}
+  },
 
-  use 'voldikss/vim-floaterm'
+  'tpope/vim-fugitive',
+  'tpope/vim-surround',
+  'tpope/vim-repeat',
+  'tpope/vim-dispatch',
+  'tpope/vim-dadbod',
+  'tpope/vim-markdown',
+  'tpope/vim-eunuch',
+  'lambdalisue/suda.vim',
 
-  use 'neovim/nvim-lspconfig'
-  use 'tjdevries/nlua.nvim'
-  use 'tjdevries/lsp_extensions.nvim'
+  'voldikss/vim-floaterm',
 
-  use 'norcalli/nvim-colorizer.lua'
+  'neovim/nvim-lspconfig',
+  'tjdevries/nlua.nvim',
+  'tjdevries/lsp_extensions.nvim',
 
-  use 'ianding1/leetcode.vim'
-  use 'vim-utils/vim-man'
-  use 'rafi/awesome-vim-colorschemes'
-  use 'Yggdroot/indentLine'
-  use 'mbbill/undotree'
-  use 'SirVer/ultisnips'
-  use 'vuciv/vim-bujo'
-  use 'honza/vim-snippets'
+  'norcalli/nvim-colorizer.lua',
 
-  use 'nvim-lua/popup.nvim'
-  use 'nvim-lua/plenary.nvim'
-  use 'nvim-telescope/telescope.nvim'
-  use 'nvim-telescope/telescope-fzy-native.nvim'
-  use 'nvim-telescope/telescope-dap.nvim'
+  'ianding1/leetcode.vim',
+  'vim-utils/vim-man',
+  'rafi/awesome-vim-colorschemes',
+  'Yggdroot/indentLine',
+  'mbbill/undotree',
+  'SirVer/ultisnips',
+  'vuciv/vim-bujo',
+  'honza/vim-snippets',
 
-  -- use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
+  'nvim-lua/popup.nvim',
+  'nvim-lua/plenary.nvim',
+  'nvim-telescope/telescope.nvim',
+  'nvim-telescope/telescope-fzy-native.nvim',
+  'nvim-telescope/telescope-dap.nvim',
 
-  use 'dstein64/vim-startuptime'
+  'nvim-treesitter/nvim-treesitter',
 
-  use 'mfussenegger/nvim-dap'
+  'dstein64/vim-startuptime',
 
-  use 'puremourning/vimspector'
+  'mfussenegger/nvim-dap',
 
-  use 'bounceme/remote-viewer'
+  'puremourning/vimspector',
 
-  use 'tami5/sql.nvim'
-  use '~/.config/nvim/nvim_plugins/ntty'
-  use 'prettier/vim-prettier'
+  'bounceme/remote-viewer',
 
-  use {
-    'nvim-tree/nvim-tree.lua',
-    requires = {
-      'nvim-tree/nvim-web-devicons', -- optional, for file icons
-    },
-  }
+  'tami5/sql.nvim',
+  'prettier/vim-prettier',
 
-  use 'mfussenegger/nvim-jdtls'
+  'nvim-tree/nvim-web-devicons',
 
-  use 'hrsh7th/nvim-cmp'
-  use 'hrsh7th/cmp-nvim-lsp'
-  use 'hrsh7th/cmp-path'
-  use 'hrsh7th/cmp-buffer'
-  use 'hrsh7th/cmp-cmdline'
-  use 'hrsh7th/cmp-nvim-lsp-signature-help'
+  'nvim-tree/nvim-tree.lua',
+
+  'mfussenegger/nvim-jdtls',
+
+  'hrsh7th/nvim-cmp',
+  'hrsh7th/cmp-nvim-lsp',
+  'hrsh7th/cmp-path',
+  'hrsh7th/cmp-buffer',
+  'hrsh7th/cmp-cmdline',
+  'hrsh7th/cmp-nvim-lsp-signature-help',
 
 
-  use 'jose-elias-alvarez/null-ls.nvim'
+  'jose-elias-alvarez/null-ls.nvim',
 
-  -- use 'jose-elias-alvarez/nvim-lsp-ts-utils'
+  'jose-elias-alvarez/nvim-lsp-ts-utils',
 
-  use 'scalameta/nvim-metals'
+  'scalameta/nvim-metals',
 
-  use { 'catppuccin/nvim', as = 'catppuccin' }
-
-  -- use 'p00f/nvim-ts-rainbow'
-
-  use "EdenEast/nightfox.nvim"
+  "EdenEast/nightfox.nvim",
 
   -- use "feline-nvim/feline.nvim"
-  use {
-    'nvim-lualine/lualine.nvim',
-    requires = { 'kyazdani42/nvim-web-devicons', opt = true }
-  }
+  'nvim-lualine/lualine.nvim',
 
-  use "lewis6991/gitsigns.nvim"
+  "lewis6991/gitsigns.nvim",
 
-  use 'jose-elias-alvarez/typescript.nvim'
+  'jose-elias-alvarez/typescript.nvim',
 
-  use { 'ray-x/lsp_signature.nvim' }
-  use { 'j-hui/fidget.nvim', tag = 'legacy' }
-  use { 'softinio/scaladex.nvim' }
-  use 'simnalamburt/vim-mundo'
-  use "fladson/vim-kitty"
+  'ray-x/lsp_signature.nvim',
+  'j-hui/fidget.nvim',
+  'softinio/scaladex.nvim',
+  'simnalamburt/vim-mundo',
+  "fladson/vim-kitty",
 
-  use { 'sindrets/diffview.nvim', requires = 'nvim-lua/plenary.nvim' }
-  use { 'kevinhwang91/nvim-bqf', ft = 'qf' }
-  use "onsails/lspkind-nvim"
+  'sindrets/diffview.nvim',
+  'kevinhwang91/nvim-bqf',
+  "onsails/lspkind-nvim",
 
-  use "simrat39/inlay-hints.nvim"
+  "simrat39/inlay-hints.nvim",
 
   -- Lua
-  use {
-    "folke/lsp-trouble.nvim",
-    requires = "kyazdani42/nvim-web-devicons",
-    config = function()
-      require("trouble").setup {
-        -- your configuration comes here
-        -- or leave it empty to use the default settings
-        -- refer to the configuration section below
-      }
-    end
-  }
+  {
+    "folke/lsp-trouble.nvim", opts = {}
+  },
 
-  use 'folke/lsp-colors.nvim'
+  'folke/lsp-colors.nvim',
 
-  use 'lewis6991/impatient.nvim'
+  'lewis6991/impatient.nvim',
 
-  use({
+  {
     "glepnir/lspsaga.nvim",
-    branch = "main",
-    config = function()
-      require("lspsaga").setup({})
-    end,
-    requires = { { "nvim-tree/nvim-web-devicons" } }
-  })
+    opts = {},
+  },
 
-  use { "akinsho/toggleterm.nvim", tag = '*', config = function()
-    require("toggleterm").setup({
-      size = 100
-    })
-  end }
+  { "akinsho/toggleterm.nvim", opts = { size = 100 } },
 
-  use "folke/tokyonight.nvim"
-end)
+  { "folke/tokyonight.nvim", opts = {} },
+
+  { 
+    "rose-pine/neovim", 
+    name = "rose-pine",
+  }
+}
