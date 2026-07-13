@@ -7,6 +7,14 @@
 
 { config, lib, ... }:
 
+let
+  # Deploy app configs as out-of-store (mutable, STABLE-path) symlinks into the
+  # repo working tree. A stable target matters: in-store symlinks change path on
+  # every `switch`, and kitty's config-watcher leaks inotify watches each time
+  # the target churns (it exhausted the per-user watch limit and crashed waybar).
+  cfg = path: config.lib.file.mkOutOfStoreSymlink
+    "${homeDirectory}/.config/home-manager/config/${path}";
+in
 {
   home = {
     inherit homeDirectory stateVersion username;
@@ -282,15 +290,14 @@
     # Static configs are copied into the store; nvim uses an out-of-store
     # (mutable) symlink so lazy.nvim can still write lazy-lock.json.
     configFile = {
-      "kitty/kitty.conf".source = ./config/kitty/kitty.conf;
-      "hypr/hyprland.conf".source = ./config/hypr/hyprland.conf;
-      "hypr/hyprlock.conf".source = ./config/hypr/hyprlock.conf;
-      "hypr/hypridle.conf".source = ./config/hypr/hypridle.conf;
-      "waybar/config.jsonc".source = ./config/waybar/config.jsonc;
-      "waybar/style.css".source = ./config/waybar/style.css;
-      "starship.toml".source = ./config/starship.toml;
-      "nvim".source = config.lib.file.mkOutOfStoreSymlink
-        "${homeDirectory}/.config/home-manager/config/nvim";
+      "kitty/kitty.conf".source = cfg "kitty/kitty.conf";
+      "hypr/hyprland.conf".source = cfg "hypr/hyprland.conf";
+      "hypr/hyprlock.conf".source = cfg "hypr/hyprlock.conf";
+      "hypr/hypridle.conf".source = cfg "hypr/hypridle.conf";
+      "waybar/config.jsonc".source = cfg "waybar/config.jsonc";
+      "waybar/style.css".source = cfg "waybar/style.css";
+      "starship.toml".source = cfg "starship.toml";
+      "nvim".source = cfg "nvim";
     };
 
     mime.enable = true;
