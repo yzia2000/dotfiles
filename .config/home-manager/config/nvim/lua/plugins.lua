@@ -249,18 +249,31 @@ return {
     ft = { 'markdown' },
     dependencies = { 'nvim-treesitter/nvim-treesitter' },
     build = ':MdMath build',
-    opts = {
-      filetypes = { 'markdown' },
-      foreground = 'Normal',
-      -- Keep equations fully rendered even under the cursor/selection.
-      -- anticonceal=true partially reverts multi-line equations in visual mode
-      -- while the image still renders, causing a bleed below.
-      anticonceal = false,
-      hide_on_insert = true,  -- reveal source in insert mode (to edit the LaTeX)
-      dynamic = true,
-      -- render at higher pixel density so equations aren't blurry on HiDPI
-      internal_scale = 2.0,
-    },
+    config = function()
+      require('mdmath').setup({
+        filetypes = { 'markdown' },
+        foreground = 'Normal',
+        anticonceal = false,
+        hide_on_insert = true,  -- reveal source in insert mode (to edit LaTeX)
+        dynamic = true,
+        internal_scale = 2.0,   -- higher density so equations aren't blurry
+      })
+      -- Visual mode leaves multi-line equations half-reverted with the image
+      -- bleeding below. Hide rendering in visual mode (show raw source), then
+      -- re-render on return to normal mode.
+      vim.api.nvim_create_autocmd('ModeChanged', {
+        callback = function()
+          local m = vim.fn.mode()
+          local ok, md = pcall(require, 'mdmath')
+          if not ok then return end
+          if m:match('[vV\22]') then
+            pcall(md.clear, 0)
+          elseif m == 'n' then
+            pcall(md.enable, 0)
+          end
+        end,
+      })
+    end,
   },
 
   'MeanderingProgrammer/render-markdown.nvim',
