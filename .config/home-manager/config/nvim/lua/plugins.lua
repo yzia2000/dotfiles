@@ -252,8 +252,11 @@ return {
     opts = {
       filetypes = { 'markdown' },
       foreground = 'Normal',
-      anticonceal = true,     -- reveal source when cursor is on the equation
-      hide_on_insert = true,  -- reveal source in insert mode
+      -- Keep equations fully rendered even under the cursor/selection.
+      -- anticonceal=true partially reverts multi-line equations in visual mode
+      -- while the image still renders, causing a bleed below.
+      anticonceal = false,
+      hide_on_insert = true,  -- reveal source in insert mode (to edit the LaTeX)
       dynamic = true,
       -- render at higher pixel density so equations aren't blurry on HiDPI
       internal_scale = 2.0,
