@@ -43,7 +43,12 @@ return {
   'nvim-telescope/telescope-fzy-native.nvim',
   'nvim-telescope/telescope-dap.nvim',
 
-  'nvim-treesitter/nvim-treesitter',
+  {
+    'nvim-treesitter/nvim-treesitter',
+    branch = 'main',
+    lazy = false,
+    build = ':TSUpdate',
+  },
 
   'dstein64/vim-startuptime',
 
@@ -130,13 +135,30 @@ return {
 
   -- "github/copilot.vim",
 
+  -- {
+  --   "NickvanDyke/opencode.nvim",
+  --   dependencies = {
+  --     -- Recommended for `ask()` and `select()`.
+  --     -- Required for `snacks` provider.
+  --     ---@module 'snacks' <- Loads `snacks.nvim` types for configuration intellisense.
+  --     { "folke/snacks.nvim", opts = { input = {}, picker = {}, terminal = {} } },
+  --   },
+  -- },
   {
-    "NickvanDyke/opencode.nvim",
-    dependencies = {
-      -- Recommended for `ask()` and `select()`.
-      -- Required for `snacks` provider.
-      ---@module 'snacks' <- Loads `snacks.nvim` types for configuration intellisense.
-      { "folke/snacks.nvim", opts = { input = {}, picker = {}, terminal = {} } },
+    "folke/snacks.nvim",
+    priority = 1000,
+    lazy = false,
+    opts = {
+      -- Enable the image module to get LaTeX previews
+      image = {
+        enabled = true,
+        doc = {
+          -- Set to true to see equations embedded directly in the buffer
+          inline = true,
+          -- Can display equation previews in a floating window on hover
+          float = false,
+        },
+      },
     },
   },
 
@@ -229,6 +251,5 @@ return {
         },
       })
     end,
-  },
-  'Thiago4532/mdmath.nvim'
+  }
 }
