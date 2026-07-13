@@ -21,7 +21,15 @@
       pkgs.haskellPackages.haskell-language-server
       pkgs.haskell.compiler.ghc96
       pkgs.zulu17
-      pkgs.jetbrains.clion
+
+      # neovim binary with the python3 provider (needed by UltiSnips). Config is
+      # fully managed by xdg.configFile."nvim" below, so we do NOT use
+      # programs.neovim (which would generate a conflicting init.lua into the
+      # symlinked nvim dir).
+      (pkgs.neovim.override {
+        withPython3 = true;
+        extraPython3Packages = ps: with ps; [ pynvim ];
+      })
 
       # Fonts — "Minimal" rice (Flexoki)
       pkgs.nerd-fonts.commit-mono  # neutral monospace: ghostty/nvim/waybar
@@ -66,12 +74,9 @@
     enableZshIntegration = true;
   };
 
-  programs.neovim = {
-    enable = true;
-    plugins = [ pkgs.vimPlugins.nvim-treesitter.withAllGrammars ];
-    viAlias = false;
-    vimAlias = false;
-  };
+  # neovim is installed as a package (see home.packages); its config lives in
+  # the repo and is symlinked via xdg.configFile."nvim". Treesitter grammars
+  # are managed at runtime by lazy.nvim (nvim-treesitter + :TSUpdate).
 
   programs.starship = {
     enable = true;
