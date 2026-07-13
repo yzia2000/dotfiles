@@ -158,6 +158,15 @@ return {
           -- Can display equation previews in a floating window on hover
           float = false,
         },
+        -- Render math at higher DPI. The default -density is only 192, which
+        -- looks blurry on a HiDPI / fractionally-scaled display. snacks fits the
+        -- image down to the inline text height, so more source pixels = sharper,
+        -- not bigger. Dial to taste: 384 = lighter, 600 = crisp.
+        convert = {
+          magick = {
+            math = { "-density", 600, "{src}[{page}]", "-trim" },
+          },
+        },
       },
     },
   },
