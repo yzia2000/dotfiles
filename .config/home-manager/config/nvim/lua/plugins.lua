@@ -157,8 +157,8 @@ return {
           inline = true,
           float = false,
         },
-        -- Math is handled by nabla.nvim (text-based, reliably sized). Disable
-        -- snacks' image-based math to avoid competing/oversized renders.
+        -- Math is handled by mdmath.nvim. Disable snacks' image-based math to
+        -- avoid competing renders.
         math = {
           enabled = false,
         },
@@ -243,25 +243,21 @@ return {
   --   end,
   -- },
 
-  -- Inline math as Unicode/ASCII virtual text — reliably sized against text.
+  -- Inline LaTeX math previews (kitty Unicode Placeholders, math-specific sizing)
   {
-    'jbyuki/nabla.nvim',
-    ft = { 'markdown', 'tex' },
-    config = function()
-      local nabla = require('nabla')
-      local function enable()
-        pcall(nabla.enable_virt, { autogen = true, silent = true })
-      end
-      -- auto-render for markdown/tex, regenerating on edits
-      vim.api.nvim_create_autocmd('FileType', {
-        pattern = { 'markdown', 'tex' },
-        callback = enable,
-      })
-      enable() -- the buffer that lazy-loaded this plugin
-      vim.keymap.set('n', '<leader>nm', function()
-        nabla.toggle_virt({ autogen = true, silent = true })
-      end, { desc = 'Toggle nabla math preview' })
-    end,
+    'Thiago4532/mdmath.nvim',
+    ft = { 'markdown' },
+    dependencies = { 'nvim-treesitter/nvim-treesitter' },
+    build = ':MdMath build',
+    opts = {
+      filetypes = { 'markdown' },
+      foreground = 'Normal',
+      anticonceal = true,     -- reveal source when cursor is on the equation
+      hide_on_insert = true,  -- reveal source in insert mode
+      dynamic = true,
+      -- render at higher pixel density so equations aren't blurry on HiDPI
+      internal_scale = 2.0,
+    },
   },
 
   'MeanderingProgrammer/render-markdown.nvim',
