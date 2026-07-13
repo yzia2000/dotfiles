@@ -5,6 +5,8 @@
 , username
 }:
 
+{ config, lib, ... }:
+
 {
   home = {
     inherit homeDirectory stateVersion username;
@@ -15,11 +17,15 @@
       pkgs.coursier
       pkgs.httpie
       pkgs.kaf
-      pkgs.jetbrains.idea-community
+      #pkgs.jetbrains.idea-community
       pkgs.haskellPackages.haskell-language-server
       pkgs.haskell.compiler.ghc96
       pkgs.zulu17
-      pkgs.citrix_workspace
+      pkgs.jetbrains.clion
+
+      # Fonts — "Minimal" rice (Flexoki)
+      pkgs.nerd-fonts.commit-mono  # neutral monospace: ghostty/nvim/waybar
+      pkgs.inter                   # Minimal theme's UI sans
     ];
 
     sessionVariables = {
@@ -27,12 +33,13 @@
       QT_QPA_PLATFORMTHEME = "qt5ct";
       QT_AUTO_SCREEN_SCALE_FACTOR = 0;
       GTK2_RC_FILES = "$HOME/.gtkrc-2.0";
-      PATH = "$HOME/.npm/bin:$HOME/.local/bin:$HOME/go/bin:$HOME/.cargo/bin:$GEM_HOME/bin:/home/yushi/.local/share/coursier/bin:$HOME/.ghcup/bin:$HOME/.cabal/bin:$PATH";
+      PATH = "$HOME/.npm/bin:$HOME/.local/bin:$HOME/go/bin:$HOME/.cargo/bin:$GEM_HOME/bin:/home/yushi/.local/share/coursier/bin:$HOME/.ghcup/bin:$HOME/.cabal/bin:$HOME/core/llama.cpp/build/bin:$PATH";
       LAST_DIR = "$HOME";
       GEM_HOME = "$(ruby -e 'puts Gem.user_dir')";
       EDITOR = "nvim";
       _JAVA_AWT_WM_NONREPARENTING = "1";
       BROWSER = "brave";
+      VCPKG_ROOT = "~/.local/share/vcpkg";
     };
 
     file.".xmonad_autostart".text = ''
@@ -62,8 +69,8 @@
   programs.neovim = {
     enable = true;
     plugins = [ pkgs.vimPlugins.nvim-treesitter.withAllGrammars ];
-    viAlias = true;
-    vimAlias = true;
+    viAlias = false;
+    vimAlias = false;
   };
 
   programs.starship = {
@@ -73,6 +80,22 @@
   programs.fzf = {
     enable = true;
     enableZshIntegration = true;
+    # Flexoki "Minimal" — monochrome, blue only on matches for readability.
+    colors = {
+      "fg" = "#CECDC3";
+      "bg" = "-1";          # inherit terminal background
+      "hl" = "#4385BE";     # matched chars — the one accent
+      "fg+" = "#E6E4D9";
+      "bg+" = "#282726";    # selected line (base-900)
+      "hl+" = "#4385BE";
+      "info" = "#6F6E69";
+      "border" = "#343331";
+      "prompt" = "#878580";
+      "pointer" = "#878580";
+      "marker" = "#879A39";
+      "spinner" = "#6F6E69";
+      "header" = "#6F6E69";
+    };
   };
 
   programs.zsh = {
@@ -101,10 +124,54 @@
       export NVM_DIR=~/.nvm
       [[ -s "$NVM_DIR/nvm.sh" ]] && source "$NVM_DIR/nvm.sh" --no-use
 
+      export PATH="$HOME/.opencode/bin:$HOME/.npm-global/bin:$PATH"
 
       export NIXPKGS_ALLOW_UNFREE=1
+      [[ "$TERM_PROGRAM" == "vscode" ]] && . "$(code --locate-shell-integration-path zsh)"
+      export OLLAMA_CONTEXT_LENGTH=64000
+      # Secrets live in an untracked file (see secrets.env.example), never in git.
+      [ -f "$HOME/.config/home-manager/secrets.env" ] && source "$HOME/.config/home-manager/secrets.env"
 
-      export PATH=~/.nvm/versions/node/v16.16.0/bin:$PATH
+      # kitty: full-bleed for TUIs — drop window padding to 0 while nvim/yazi
+      # run, restore the configured padding on exit. No-op outside kitty.
+      _kitty_fullbleed() {
+        if [ -z "$KITTY_WINDOW_ID" ]; then command "$@"; return $?; fi
+        kitty @ set-spacing padding=0 >/dev/null 2>&1
+        command "$@"
+        local ret=$?
+        kitty @ set-spacing padding=default >/dev/null 2>&1
+        return $ret
+      }
+      nvim() { _kitty_fullbleed nvim "$@"; }
+      yazi() { _kitty_fullbleed yazi "$@"; }
+
+      # ls / file listings — Flexoki file-type colors (truecolor).
+      # Dirs: bright blue #4385BE bold (was dull default #205EA6). Symlink cyan,
+      # executable green, broken link red; archives orange, media purple.
+      export LS_COLORS="di=1;38;2;67;133;190:ln=38;2;58;169;159:or=1;38;2;209;77;65:mi=1;38;2;209;77;65:ex=1;38;2;135;154;57:pi=38;2;135;133;128:so=38;2;139;126;200:bd=38;2;208;162;21:cd=38;2;208;162;21:su=38;2;218;112;44:sg=38;2;218;112;44:tw=1;38;2;67;133;190:ow=1;38;2;67;133;190:st=1;38;2;67;133;190:*.tar=38;2;218;112;44:*.tgz=38;2;218;112;44:*.gz=38;2;218;112;44:*.zip=38;2;218;112;44:*.xz=38;2;218;112;44:*.zst=38;2;218;112;44:*.bz2=38;2;218;112;44:*.7z=38;2;218;112;44:*.rar=38;2;218;112;44:*.jpg=38;2;139;126;200:*.jpeg=38;2;139;126;200:*.png=38;2;139;126;200:*.gif=38;2;139;126;200:*.bmp=38;2;139;126;200:*.svg=38;2;139;126;200:*.webp=38;2;139;126;200:*.mp4=38;2;139;126;200:*.mkv=38;2;139;126;200:*.webm=38;2;139;126;200:*.mov=38;2;139;126;200:*.mp3=38;2;135;133;128:*.flac=38;2;135;133;128:*.wav=38;2;135;133;128:*.pdf=38;2;208;162;21:*.md=38;2;208;162;21:*.txt=38;2;206;205;195"
+
+      # zsh-syntax-highlighting — Flexoki "Minimal" palette.
+      # Valid commands green, errors red, quotes yellow; everything else calm.
+      typeset -gA ZSH_HIGHLIGHT_STYLES
+      ZSH_HIGHLIGHT_STYLES[default]='fg=#CECDC3'
+      ZSH_HIGHLIGHT_STYLES[unknown-token]='fg=#D14D41'
+      ZSH_HIGHLIGHT_STYLES[reserved-word]='fg=#8B7EC8'
+      ZSH_HIGHLIGHT_STYLES[command]='fg=#879A39'
+      ZSH_HIGHLIGHT_STYLES[builtin]='fg=#879A39'
+      ZSH_HIGHLIGHT_STYLES[function]='fg=#879A39'
+      ZSH_HIGHLIGHT_STYLES[alias]='fg=#879A39'
+      ZSH_HIGHLIGHT_STYLES[precommand]='fg=#879A39,italic'
+      ZSH_HIGHLIGHT_STYLES[path]='fg=#CECDC3,underline'
+      ZSH_HIGHLIGHT_STYLES[globbing]='fg=#DA702C'
+      ZSH_HIGHLIGHT_STYLES[single-quoted-argument]='fg=#D0A215'
+      ZSH_HIGHLIGHT_STYLES[double-quoted-argument]='fg=#D0A215'
+      ZSH_HIGHLIGHT_STYLES[dollar-double-quoted-argument]='fg=#3AA99F'
+      ZSH_HIGHLIGHT_STYLES[command-substitution]='fg=#3AA99F'
+      ZSH_HIGHLIGHT_STYLES[comment]='fg=#6F6E69,italic'
+      ZSH_HIGHLIGHT_STYLES[redirection]='fg=#878580'
+      ZSH_HIGHLIGHT_STYLES[commandseparator]='fg=#878580'
+      ZSH_HIGHLIGHT_STYLES[double-hyphen-option]='fg=#878580'
+      ZSH_HIGHLIGHT_STYLES[single-hyphen-option]='fg=#878580'
     '';
   };
 
@@ -194,11 +261,30 @@
     '';
   };
 
+  # Register home-manager-installed fonts with fontconfig (needed on genericLinux)
+  fonts.fontconfig.enable = true;
+
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
 
   xdg = {
     enable = true;
+
+    # App configs managed by home-manager (source of truth: ./config/*).
+    # Static configs are copied into the store; nvim uses an out-of-store
+    # (mutable) symlink so lazy.nvim can still write lazy-lock.json.
+    configFile = {
+      "kitty/kitty.conf".source = ./config/kitty/kitty.conf;
+      "hypr/hyprland.conf".source = ./config/hypr/hyprland.conf;
+      "hypr/hyprlock.conf".source = ./config/hypr/hyprlock.conf;
+      "hypr/hypridle.conf".source = ./config/hypr/hypridle.conf;
+      "waybar/config.jsonc".source = ./config/waybar/config.jsonc;
+      "waybar/style.css".source = ./config/waybar/style.css;
+      "starship.toml".source = ./config/starship.toml;
+      "nvim".source = config.lib.file.mkOutOfStoreSymlink
+        "${homeDirectory}/.config/home-manager/config/nvim";
+    };
+
     mime.enable = true;
     mimeApps = {
       enable = true;
@@ -213,7 +299,7 @@
         "application/x-extension-html" = "brave-browser.desktop";
         "application/x-extension-shtml" = "brave-browser.desktop";
         "x-www-browser" = "brave-browser.desktop";
-        "application/x-ica" = "citrix-wfica.desktop";
+        "application/x-ica" = "wfica.desktop";
         "application/xhtml+xml" = "brave-browser.desktop";
         "application/x-extension-xhtml" = "brave-browser.desktop";
         "application/x-extension-xht" = "brave-browser.desktop";

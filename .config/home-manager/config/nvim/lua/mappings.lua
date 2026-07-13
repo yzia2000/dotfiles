@@ -1,0 +1,27 @@
+local keymap = vim.keymap.set
+keymap({ "n", "v" }, "<leader>ca", "<cmd>Lspsaga code_action<CR>", { silent = true })
+keymap("n", "<leader>rn", "<cmd>Lspsaga rename<CR>", { silent = true })
+keymap("n", "<leader>vsd", "<cmd>Lspsaga show_line_diagnostics<CR>", { silent = true })
+keymap("n", "[e", "<cmd>Lspsaga diagnostic_jump_prev<CR>", { silent = true })
+keymap("n", "]e", "<cmd>Lspsaga diagnostic_jump_next<CR>", { silent = true })
+keymap("n", "[E", function()
+  require("lspsaga.diagnostic").goto_prev({ severity = vim.diagnostic.severity.ERROR })
+end, { silent = true })
+keymap("n", "]E", function()
+  require("lspsaga.diagnostic").goto_next({ severity = vim.diagnostic.severity.ERROR })
+end, { silent = true })
+keymap("n", "vh", "<cmd>Lspsaga hover_doc<CR>", { silent = true })
+
+keymap({ "n", "t" }, "<A-u>", [[<cmd>ToggleTerm 1 size=200<CR>]])
+keymap({ "n", "t" }, "<A-i>", [[<cmd>ToggleTerm 2 size=200<CR>]])
+keymap({ "n", "t" }, "<A-o>", [[<cmd>ToggleTerm 3 size=200<CR>]])
+keymap({ "n", "t" }, "<A-h>", [[<cmd>ToggleTermToggleAll<CR>]])
+
+keymap('t', 'jk', [[<C-\><C-n>]])
+keymap('t', '<C-h>', [[<Cmd>wincmd h<CR>]])
+keymap('t', '<C-j>', [[<Cmd>wincmd j<CR>]])
+keymap('t', '<C-k>', [[<Cmd>wincmd k<CR>]])
+keymap('t', '<C-l>', [[<Cmd>wincmd l<CR>]])
+
+vim.g.copilot_no_tab_map = true
+-- keymap('i', '<C-j>', 'copilot#Accept("\\<C-j>")', { expr = true, replace_keycodes = false })

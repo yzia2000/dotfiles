@@ -1,0 +1,45 @@
+# ─────────────────────────────────────────────────────────────
+# Flexoki "Minimal" prompt — monochrome, breathing room, one accent.
+# Two lines: muted info line, then a bare λ (gray → red on error).
+# ─────────────────────────────────────────────────────────────
+
+add_newline = true
+
+format = """
+$directory$git_branch$git_status$cmd_duration
+$character"""
+
+[directory]
+style = "#CECDC3 bold"          # base-200 — the readable anchor
+truncation_length = 3
+truncate_to_repo = true
+read_only = " "
+read_only_style = "#6F6E69"
+
+[git_branch]
+symbol = " "
+style = "#878580"               # base-500 muted
+format = "[$symbol$branch]($style) "
+
+[git_status]
+style = "#6F6E69"               # base-600 dim
+format = "([$all_status$ahead_behind]($style) )"
+
+[cmd_duration]
+min_time = 2000                 # only when a command takes >2s
+style = "#6F6E69 italic"
+format = "[$duration]($style) "
+
+[character]
+success_symbol = "[λ](#878580) "   # gray normally
+error_symbol = "[λ](#D14D41) "     # flexoki red on failure
+vimcmd_symbol = "[λ](#879A39) "    # green in vi-cmd mode
+
+[package]
+disabled = true
+
+[scala]
+disabled = true
+
+[gcloud]
+disabled = true

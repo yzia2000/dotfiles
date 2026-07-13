@@ -1,0 +1,105 @@
+/* ─────────────────────────────────────────────────────────────
+   Flexoki Dark — "Minimal" waybar
+   Flat, monochrome. One accent: base-300 for the active workspace.
+   ───────────────────────────────────────────────────────────── */
+
+* {
+  border: none;
+  border-radius: 0;
+  font-family: CommitMono Nerd Font;
+  font-size: 13px;
+  font-weight: 500;
+  min-height: 0;
+}
+
+window#waybar {
+  background: #100f0f;              /* flexoki black */
+  color: #b7b5ac;                  /* base-300 */
+  border-bottom: 1px solid #282726; /* base-900 hairline */
+}
+
+tooltip {
+  background: #1c1b1a;             /* base-950 */
+  border: 1px solid #343331;      /* base-850 */
+}
+
+tooltip label {
+  color: #cecdc3;                 /* base-200 */
+}
+
+/* Workspaces — quiet dots of text, active one brightens */
+#workspaces {
+  background: transparent;
+  margin: 0 6px;
+}
+
+#workspaces button {
+  padding: 0 8px;
+  margin: 4px 1px;
+  color: #575653;                 /* base-700 — dim */
+  background: transparent;
+  border-radius: 6px;
+}
+
+#workspaces button.active,
+#workspaces button.focused {
+  color: #e6e4d9;                 /* base-100 — bright */
+  background: #282726;            /* base-900 */
+}
+
+#workspaces button.urgent {
+  color: #100f0f;
+  background: #af3029;            /* flexoki red, sparingly */
+}
+
+#workspaces button:hover {
+  color: #cecdc3;
+  background: #1c1b1a;
+  box-shadow: none;
+  text-shadow: none;
+}
+
+#window {
+  color: #6f6e69;                 /* base-600 — window title stays subtle */
+  font-weight: 400;
+}
+
+/* Right-side modules — uniform, monochrome, evenly spaced */
+#cpu,
+#memory,
+#custom-media,
+#clock,
+#battery,
+#pulseaudio,
+#network,
+#tray {
+  color: #b7b5ac;                 /* base-300 */
+  background: transparent;
+  padding: 0 10px;
+  margin: 4px 0;
+}
+
+#clock {
+  color: #cecdc3;                 /* base-200 — slightly brighter anchor */
+  margin-right: 12px;
+}
+
+#battery.warning {
+  color: #ad8301;                 /* flexoki yellow */
+}
+
+#battery.critical {
+  color: #af3029;                 /* flexoki red */
+}
+
+#pulseaudio.muted {
+  color: #575653;                 /* base-700 */
+}
+
+#custom-media {
+  color: #878580;                 /* base-500 */
+}
+
+#tray {
+  padding-left: 12px;
+}

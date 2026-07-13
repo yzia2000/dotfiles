@@ -1,0 +1,9 @@
+# Secrets — never commit (see secrets.env.example)
+/secrets.env
+
+# Nix build result symlinks
+/result
+/result-*
+
+# Local editor tooling state
+config/nvim/.claude/
