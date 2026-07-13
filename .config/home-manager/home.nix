@@ -7,6 +7,23 @@
 
 { config, lib, ... }:
 
+let
+  # LaTeX tree-sitter parser built at the exact revision our pinned
+  # nvim-treesitter expects, so its bundled highlight queries match. Built with
+  # generate = true (the rev ships no pre-generated parser.c); buildGrammar uses
+  # a compatible bundled tree-sitter to generate it.
+  latexGrammar = pkgs.tree-sitter.buildGrammar {
+    language = "latex";
+    version = "7b06f6e";
+    generate = true;
+    src = pkgs.fetchFromGitHub {
+      owner = "latex-lsp";
+      repo = "tree-sitter-latex";
+      rev = "7b06f6ed394308e7407a1703d2724128c45fc9d7";
+      hash = "sha256-HbRjblLBExpBkBBjHyEHfnK0oootjAsqkwjmGH3/UYI=";
+    };
+  };
+in
 {
   home = {
     inherit homeDirectory stateVersion username;
@@ -289,6 +306,11 @@
       "nvim".source = config.lib.file.mkOutOfStoreSymlink
         "${homeDirectory}/.config/home-manager/config/nvim";
     };
+
+    # Version-matched latex parser on nvim's runtimepath (~/.local/share/nvim/
+    # site is on rtp). Avoids runtime `tree-sitter generate`, which this pinned
+    # nvim-treesitter can't do with the newer tree-sitter CLI.
+    dataFile."nvim/site/parser/latex.so".source = "${latexGrammar}/parser";
 
     mime.enable = true;
     mimeApps = {
