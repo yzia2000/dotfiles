@@ -153,19 +153,14 @@ return {
       image = {
         enabled = true,
         doc = {
-          -- Set to true to see equations embedded directly in the buffer
+          -- Inline rendering for real images only.
           inline = true,
-          -- Can display equation previews in a floating window on hover
           float = false,
         },
-        -- Render math at higher DPI. The default -density is only 192, which
-        -- looks blurry on a HiDPI / fractionally-scaled display. snacks fits the
-        -- image down to the inline text height, so more source pixels = sharper,
-        -- not bigger. Dial to taste: 384 = lighter, 600 = crisp.
-        convert = {
-          magick = {
-            math = { "-density", 600, "{src}[{page}]", "-trim" },
-          },
+        -- Math is handled by nabla.nvim (text-based, reliably sized). Disable
+        -- snacks' image-based math to avoid competing/oversized renders.
+        math = {
+          enabled = false,
         },
       },
     },
@@ -247,6 +242,27 @@ return {
   --     })
   --   end,
   -- },
+
+  -- Inline math as Unicode/ASCII virtual text — reliably sized against text.
+  {
+    'jbyuki/nabla.nvim',
+    ft = { 'markdown', 'tex' },
+    config = function()
+      local nabla = require('nabla')
+      local function enable()
+        pcall(nabla.enable_virt, { autogen = true, silent = true })
+      end
+      -- auto-render for markdown/tex, regenerating on edits
+      vim.api.nvim_create_autocmd('FileType', {
+        pattern = { 'markdown', 'tex' },
+        callback = enable,
+      })
+      enable() -- the buffer that lazy-loaded this plugin
+      vim.keymap.set('n', '<leader>nm', function()
+        nabla.toggle_virt({ autogen = true, silent = true })
+      end, { desc = 'Toggle nabla math preview' })
+    end,
+  },
 
   'MeanderingProgrammer/render-markdown.nvim',
   {
