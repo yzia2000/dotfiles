@@ -81,7 +81,7 @@ Rectangle {
                 background: Item {}
                 placeholderText: "enter password"
                 placeholderTextColor: root.faint
-                onAccepted: sddm.login(userName.text, password.text, sessionCombo.currentIndex)
+                onAccepted: sddm.login(userCombo.currentText, password.text, sessionCombo.currentIndex)
                 Keys.onPressed: function(e) { errorText.opacity = 0 }
             }
         }
@@ -98,14 +98,17 @@ Rectangle {
             Behavior on opacity { NumberAnimation { duration: 200 } }
         }
 
-        // User
-        Text {
-            id: userName
+        // User selector
+        ComboBox {
+            id: userCombo
             anchors.horizontalCenter: parent.horizontalCenter
-            color: root.faint
+            width: parent.width
+            model: userModel
+            textRole: "name"
+            currentIndex: userModel.lastIndex
             font.family: "CommitMono Nerd Font"
             font.pixelSize: 14
-            text: userModel.lastUser
+            flat: true
         }
     }
 
