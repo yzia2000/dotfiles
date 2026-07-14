@@ -1,0 +1,10 @@
+[SddmGreeterTheme]
+Name=Flexoki Minimal
+Description=Minimal Flexoki dark theme
+Author=yushi
+Type=sddm-theme
+Version=1.0
+MainScript=Main.qml
+ConfigFile=theme.conf
+Theme-Id=flexoki-minimal
+Theme-API=2.0
