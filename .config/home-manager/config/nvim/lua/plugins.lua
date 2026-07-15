@@ -109,8 +109,6 @@ return {
 
   'folke/lsp-colors.nvim',
 
-  'lewis6991/impatient.nvim',
-
   {
     "glepnir/lspsaga.nvim",
     opts = {},
@@ -249,34 +247,16 @@ return {
     ft = { 'markdown' },
     dependencies = { 'nvim-treesitter/nvim-treesitter' },
     build = ':MdMath build',
-    config = function()
-      require('mdmath').setup({
-        filetypes = { 'markdown' },
-        foreground = 'Normal',
-        anticonceal = false,
-        hide_on_insert = true,  -- reveal source in insert mode (to edit LaTeX)
-        dynamic = true,
-        internal_scale = 2.0,   -- higher density so equations aren't blurry
-      })
-      -- Visual mode leaves multi-line equations half-reverted with the image
-      -- bleeding below. Hide rendering in visual mode (show raw source), then
-      -- re-render on return to normal mode.
-      vim.api.nvim_create_autocmd('ModeChanged', {
-        callback = function()
-          local m = vim.fn.mode()
-          local ok, md = pcall(require, 'mdmath')
-          if not ok then return end
-          if m:match('[vV\22]') then
-            pcall(md.clear, 0)
-          elseif m == 'n' then
-            pcall(md.enable, 0)
-          end
-        end,
-      })
-    end,
   },
 
-  'MeanderingProgrammer/render-markdown.nvim',
+  { 'MeanderingProgrammer/render-markdown.nvim',
+    -- `opts` (not `opt` — lazy.nvim ignores `opt`, which left render-markdown's
+    -- own LaTeX renderer enabled and fighting mdmath.nvim, producing a double
+    -- render of every equation).
+    opts = {
+      latex = { enabled = false },
+    },
+  },
   {
     "supermaven-inc/supermaven-nvim",
     config = function()

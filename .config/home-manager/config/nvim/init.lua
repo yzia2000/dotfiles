@@ -53,7 +53,10 @@ vim.cmd([[ source $HOME/.config/nvim/au.vim ]])
 vim.cmd([[ source $HOME/.config/nvim/var.vim ]])
 vim.cmd([[ source $HOME/.config/nvim/mappings.vim ]])
 
-require('impatient')
+-- impatient.nvim is deprecated/archived and patches package.loaded in a way
+-- that breaks after :Lazy sync (lualine git_branch: "index field 'loaded'").
+-- Neovim's built-in module cache replaces it.
+if vim.loader then vim.loader.enable() end
 
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
