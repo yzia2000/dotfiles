@@ -7,15 +7,9 @@
       url = "github:nix-community/home-manager/release-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    # OpenGL/EGL wrapper for nix GUI apps on a non-NixOS host, where the GPU
-    # drivers live in /usr/lib instead of /run/opengl-driver.
-    nixgl = {
-      url = "github:nix-community/nixGL";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
   };
 
-  outputs = { self, nixpkgs, home-manager, nixgl }:
+  outputs = { self, nixpkgs, home-manager }:
     let
       # Values you should modify
       username = "yushi"; # $USER
@@ -24,9 +18,6 @@
 
       pkgs = import nixpkgs {
         inherit system;
-
-        # Provides pkgs.nixgl.* (auto.nixGLDefault and friends).
-        overlays = [ nixgl.overlays.default ];
 
         config = {
           allowUnfree = true;
