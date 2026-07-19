@@ -14,27 +14,6 @@ let
   # the target churns (it exhausted the per-user watch limit and crashed waybar).
   cfg = path: config.lib.file.mkOutOfStoreSymlink
     "${homeDirectory}/.config/home-manager/config/${path}";
-
-  # nixpkgs' kitty aborts on launch on non-NixOS: it resolves EGL/GL vendor
-  # libs inside the nix store, but the actual GPU drivers live in Arch's
-  # /usr/lib, so EGL init fails ("EGLDisplay argument does not name a valid
-  # EGL display connection") and it dumps core.
-  #
-  # Point it at the host drivers. LD_LIBRARY_PATH is genuinely required here
-  # (the vendor-dir and DRI vars alone are not enough), so we scope all three
-  # to kitty via a wrapper — setting them globally would make every other nix
-  # program load Arch's libraries and break them.
-  kitty-hostgl = pkgs.symlinkJoin {
-    name = "kitty-hostgl";
-    paths = [ pkgs.kitty ];
-    nativeBuildInputs = [ pkgs.makeWrapper ];
-    postBuild = ''
-      wrapProgram $out/bin/kitty \
-        --set __EGL_VENDOR_LIBRARY_DIRS /usr/share/glvnd/egl_vendor.d \
-        --set LIBGL_DRIVERS_PATH /usr/lib/dri \
-        --prefix LD_LIBRARY_PATH : /usr/lib
-    '';
-  };
 in
 {
   home = {
@@ -43,12 +22,14 @@ in
     # Packages that should be installed to the user profile.
     packages = [
       pkgs.nil
-      # Terminal. Installed as a plain package (not programs.kitty) so that
-      # kitty.conf stays an out-of-store symlink via xdg.configFile below —
-      # see the `cfg` comment about kitty's config-watcher leaking inotify
-      # watches when the target path churns on every switch.
-      # Wrapped for host GPU drivers — see kitty-hostgl above.
-      kitty-hostgl
+      # NOTE: kitty is deliberately NOT installed via nix. nixpkgs' kitty
+      # resolves EGL/GL vendor libs in the nix store, but the GPU drivers live
+      # in Arch's /usr/lib, so it dumps core on launch. Working around it needs
+      # an LD_LIBRARY_PATH wrapper, which then leaks into child processes and
+      # breaks other nix binaries. On a hybrid NVIDIA laptop the driver
+      # userspace must also match the kernel module version exactly (610.43.02),
+      # which nix cannot track. kitty comes from pacman; its config is still
+      # managed here via xdg.configFile."kitty/kitty.conf".
       # tree-sitter CLI (>=0.26.1) — nvim-treesitter `main` uses it (+ a C
       # compiler) to install/generate parsers via :TSUpdate / :TSInstall.
       pkgs.tree-sitter
