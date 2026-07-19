@@ -14,6 +14,26 @@ let
   # the target churns (it exhausted the per-user watch limit and crashed waybar).
   cfg = path: config.lib.file.mkOutOfStoreSymlink
     "${homeDirectory}/.config/home-manager/config/${path}";
+
+  # nixpkgs' kitty can't initialise EGL on a non-NixOS host: it looks for GPU
+  # drivers in the nix store / /run/opengl-driver, but on Arch they live in
+  # /usr/lib. nixGL supplies a matching userspace GL stack and sets the driver
+  # search paths before exec'ing the program.
+  #
+  # auto.nixGLDefault probes the host driver at eval time, so `home-manager
+  # switch` must be run with --impure. On this machine it resolves to a
+  # Mesa-only wrapper (the Radeon iGPU); the NVIDIA userspace is not attached
+  # because nixGL has no build matching kernel module 610.43.02.
+  kitty-nixgl = pkgs.symlinkJoin {
+    name = "kitty-nixgl";
+    paths = [ pkgs.kitty ];
+    nativeBuildInputs = [ pkgs.makeWrapper ];
+    postBuild = ''
+      rm -f $out/bin/kitty
+      makeWrapper ${pkgs.nixgl.auto.nixGLDefault}/bin/nixGL $out/bin/kitty \
+        --add-flags ${pkgs.kitty}/bin/kitty
+    '';
+  };
 in
 {
   home = {
@@ -22,14 +42,10 @@ in
     # Packages that should be installed to the user profile.
     packages = [
       pkgs.nil
-      # NOTE: kitty is deliberately NOT installed via nix. nixpkgs' kitty
-      # resolves EGL/GL vendor libs in the nix store, but the GPU drivers live
-      # in Arch's /usr/lib, so it dumps core on launch. Working around it needs
-      # an LD_LIBRARY_PATH wrapper, which then leaks into child processes and
-      # breaks other nix binaries. On a hybrid NVIDIA laptop the driver
-      # userspace must also match the kernel module version exactly (610.43.02),
-      # which nix cannot track. kitty comes from pacman; its config is still
-      # managed here via xdg.configFile."kitty/kitty.conf".
+      # Terminal, wrapped by nixGL so it can reach the host GPU (see
+      # kitty-nixgl above). Kept as a plain package rather than programs.kitty
+      # so kitty.conf stays an out-of-store symlink via xdg.configFile.
+      kitty-nixgl
       # tree-sitter CLI (>=0.26.1) — nvim-treesitter `main` uses it (+ a C
       # compiler) to install/generate parsers via :TSUpdate / :TSInstall.
       pkgs.tree-sitter
