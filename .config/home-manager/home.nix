@@ -22,12 +22,20 @@ in
     # Packages that should be installed to the user profile.
     packages = [
       pkgs.nil
+      # Terminal. Installed as a plain package (not programs.kitty) so that
+      # kitty.conf stays an out-of-store symlink via xdg.configFile below —
+      # see the `cfg` comment about kitty's config-watcher leaking inotify
+      # watches when the target path churns on every switch.
+      pkgs.kitty
       # tree-sitter CLI (>=0.26.1) — nvim-treesitter `main` uses it (+ a C
       # compiler) to install/generate parsers via :TSUpdate / :TSInstall.
       pkgs.tree-sitter
       pkgs.coursier
       pkgs.httpie
       pkgs.kaf
+      # Used by hypr/scripts/workspace-listener.sh to watch Hyprland's event
+      # socket and rebalance workspaces across monitors on hotplug.
+      pkgs.socat
       #pkgs.jetbrains.idea-community
       pkgs.haskellPackages.haskell-language-server
       pkgs.haskell.compiler.ghc96
@@ -294,6 +302,7 @@ in
       "hypr/hyprland.conf".source = cfg "hypr/hyprland.conf";
       "hypr/hyprlock.conf".source = cfg "hypr/hyprlock.conf";
       "hypr/hypridle.conf".source = cfg "hypr/hypridle.conf";
+      "hypr/scripts".source = cfg "hypr/scripts";
       "waybar/config.jsonc".source = cfg "waybar/config.jsonc";
       "waybar/style.css".source = cfg "waybar/style.css";
       "starship.toml".source = cfg "starship.toml";
