@@ -38,16 +38,27 @@
       # hyprland.conf sources. Prefer `preferred` over a hardcoded mode: asking
       # for a mode the panel does not advertise in its EDID makes the modeset
       # fail, and aquamarine segfaults on the first frame afterwards.
+      #
+      # `deadSpeaker` (null on most hosts) silences one channel of the built-in
+      # speaker pair at the ALSA mixer. See deadSpeakerModule below.
       # ----------------------------------------------------------------------
       hosts = {
         archyoga = {
           # Lenovo YOGA 920, i7-8550U. eDP-1 advertises 1920x1080 only.
           monitors = [ "eDP-1, preferred, 0x0, 1.25" ];
+
+          deadSpeaker = {
+            card = "PCH";                          # `amixer -c` / /proc/asound/cards
+            device = "alsa_card.pci-0000_00_1f.3"; # wireplumber device.name
+            channel = "frontleft";                 # amixer channel token
+          };
         };
 
         legion = {
           # 2560x1600 165Hz panel; 1.6 is a whole-pixel scale (-> 1600x1000).
           monitors = [ "eDP-1, 2560x1600@165, 0x0, 1.6" ];
+
+          deadSpeaker = null;
         };
       };
 
@@ -65,12 +76,67 @@
         '';
       };
 
+      # ----------------------------------------------------------------------
+      # A physically dead speaker, silenced at the ALSA mixer -- the only layer
+      # below everything that can turn it back on.
+      #
+      # Per-channel *stream* volume (`pactl set-sink-volume @DEFAULT_SINK@ 0%
+      # 75%`) does not survive: `wpctl set-volume`, which the XF86AudioRaise/
+      # Lower binds in hypr/hyprland.conf use, writes one volume to every
+      # channel, so the first volume keypress un-mutes the dead side. Nor does
+      # a wireplumber `audio.position` override ([ NA, FR ]): pipewire's
+      # channelmix falls back to a 1:1 map when the target position is unknown
+      # and keeps feeding the channel (measured off the sink monitor).
+      #
+      # The card's `Speaker` control has an independent per-channel mute, so
+      # mute the dead channel there. `api.alsa.soft-mixer` is the other half:
+      # it moves pipewire's volume handling into software so ACP stops driving
+      # the hardware mixer and cannot undo the mute.
+      # ----------------------------------------------------------------------
+      deadSpeakerModule = hostName: host: { pkgs, ... }:
+        nixpkgs.lib.optionalAttrs (host.deadSpeaker != null) (
+          let d = host.deadSpeaker; in {
+            xdg.configFile."wireplumber/wireplumber.conf.d/51-soft-mixer.conf".text = ''
+              # GENERATED for host "${hostName}" -- do not edit.
+              # Source of truth: hosts.${hostName}.deadSpeaker in flake.nix
+              #
+              # Keep pipewire off the hardware mixer, so the muted
+              # ${d.channel} channel stays muted.
+              monitor.alsa.rules = [
+                {
+                  matches = [
+                    { device.name = "${d.device}" }
+                  ]
+                  actions = {
+                    update-props = {
+                      api.alsa.soft-mixer = true
+                    }
+                  }
+                }
+              ]
+            '';
+
+            systemd.user.services.mute-dead-speaker = {
+              Unit.Description =
+                "Mute the dead ${d.channel} speaker channel on card ${d.card}";
+              Service = {
+                Type = "oneshot";
+                RemainAfterExit = true;
+                ExecStart =
+                  "${pkgs.alsa-utils}/bin/amixer -c ${d.card} sset Speaker ${d.channel} 0% mute";
+              };
+              Install.WantedBy = [ "default.target" ];
+            };
+          }
+        );
+
       mkHome = hostName: host: home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
 
         modules = [
           home
           (hostModule hostName host)
+          (deadSpeakerModule hostName host)
         ];
       };
     in
